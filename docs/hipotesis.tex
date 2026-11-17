@@ -1,0 +1,15 @@
+\section{Objetivo e hipótesis}
+
+\textbf{Objetivo.} Comparar la latencia de ida y vuelta y el rendimiento de
+sockets TCP con JSON y gRPC con Protocol Buffers en tres nodos. El
+experimento también busca comprobar, mediante los registros de envío y
+recepción, el orden causal que establece el reloj de Lamport.
+
+\textbf{Hipótesis.} Con conexiones ya establecidas y envíos secuenciales de
+aproximadamente 100 bytes de contenido, esperamos que la mediana de la
+latencia de ida y vuelta sea menor con sockets TCP. La razón es que, con
+mensajes cortos en localhost, el procesamiento de la llamada gRPC sobre
+HTTP/2 podría pesar más que el ahorro de serializar el mensaje con
+Protocol Buffers. Compararemos también los mensajes de aproximadamente
+10 KB y el caso de tres clientes concurrentes para ver cómo cambian la
+latencia y el rendimiento en esas condiciones.
