@@ -29,6 +29,15 @@
 - Aportes publicados: [dependencias e hipótesis](https://github.com/iMouraad/PE-U1-MPZ/commit/06b09be470f6cc1f77d8f8b6a40be9c13855f3cc) y [script de análisis](https://github.com/iMouraad/PE-U1-MPZ/commit/f7cb1edbd9493d57c989a1cf0675eb7d19c0a8c7).
 - Problemas encontrados y solución: todavía faltaban los CSV de mediciones. Se definió un formato provisional, pendiente de contrastarlo con los archivos que generen sockets y gRPC.
 
+## Miércoles 18/11/2026 — Sesión de Steven
+
+- Integrante: Steven Pozo.
+- Qué hicimos: implementamos un único programa para ejecutar nodo-A, nodo-B y nodo-C mediante gRPC en los puertos 50051, 50052 y 50053. Cada nodo funciona como servidor y cliente, incrementa su reloj de Lamport antes de enviar y al recibir aplica max(local, recibido) + 1.
+- Corrida: ejecutamos los tres nodos con 7 envíos cada uno y registramos automáticamente los eventos en data/eventos_grpc_nodo-A.csv, nodo-B.csv y nodo-C.csv, usando el mismo formato de los registros de sockets.
+- Verificación: comprobamos los CSV con analysis/verificar_lamport.py para emparejar cada envío con su recepción y validar las actualizaciones del reloj lógico.
+- Entorno: registramos en data/readme.md el sistema operativo, procesador, RAM, versiones de Python y gRPC, y los comandos utilizados.
+- Pendiente: realizar las corridas de latencia de 100 bytes y 10 KB, incluida la prueba concurrente, según el protocolo experimental.
+
 ## Miércoles 18/11/2026 — Sesión de Melanie
 
 - Integrante: Melanie Muñoz.
