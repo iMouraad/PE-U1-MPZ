@@ -1,0 +1,13 @@
+nodo,tipo_evento,reloj,hora_real,id_mensaje,contraparte
+nodo-A,envio,1,2026-11-18 10:50:25.466412,a5cbb3c7,nodo-B
+nodo-A,envio,2,2026-11-18 10:50:25.829969,cf648d87,nodo-C
+nodo-A,recepcion,5,2026-11-18 10:50:26.259133,4806086b,nodo-C
+nodo-A,envio,6,2026-11-18 10:50:26.607215,a1b02ff1,nodo-C
+nodo-A,recepcion,7,2026-11-18 10:50:27.063966,04593ebc,nodo-B
+nodo-A,envio,8,2026-11-18 10:50:27.105877,2c5b544b,nodo-B
+nodo-A,recepcion,12,2026-11-18 10:50:27.287992,da95b6f8,nodo-B
+nodo-A,envio,13,2026-11-18 10:50:27.761340,267f0621,nodo-C
+nodo-A,recepcion,18,2026-11-18 10:50:28.048847,2e6ff67b,nodo-C
+nodo-A,envio,19,2026-11-18 10:50:28.074954,277aa2ec,nodo-B
+nodo-A,envio,20,2026-11-18 10:50:28.689689,61d15974,nodo-B
+nodo-A,recepcion,29,2026-11-18 10:50:28.981338,f892edb6,nodo-C
