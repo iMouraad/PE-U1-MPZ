@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package pe_u1;
+
+// Servicio mínimo para intercambiar mensajes entre los nodos gRPC.
+service CommunicationService {
+  rpc ExchangeMessage(MessageRequest) returns (MessageResponse);
+}
+
+message MessageRequest {
+  string sender = 1;
+  string timestamp = 2;
+  string message = 3;
+  int64 lamport_clock = 4;
+}
+
+message MessageResponse {
+  string sender = 1;
+  string timestamp = 2;
+  string message = 3;
+  int64 lamport_clock = 4;
+}
