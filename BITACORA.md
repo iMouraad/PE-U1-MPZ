@@ -20,3 +20,21 @@
   - En la primera corrida el nodo-C se cayó con ConnectionRefusedError porque el nodo-A ya había terminado y cerrado su puerto. Lo resolvimos con 3 reintentos por envío y 20 segundos de espera antes de cerrar cada nodo.
   - En la segunda corrida al nodo-A no se le dio Enter y solo hubo 14 mensajes. Repetimos la corrida presionando Enter en los tres nodos.
   - En PowerShell el comando whoami & hostname daba error porque ahí se separa con punto y coma. En cmd se usa &.
+
+## Martes 17/11/2026 — Sesión de Melanie
+
+- Integrante: Melanie Muñoz.
+- Qué hicimos: con apoyo de Codex, preparamos las versiones de las cinco dependencias en requirements.txt y el objetivo e hipótesis en docs/hipotesis.tex. Comprobamos la instalación en un entorno virtual con Python 3.14 y la compilación del fragmento LaTeX. También preparamos analysis/analizar.py para calcular estadísticas de latencia y rendimiento, descartar el calentamiento y agrupar por mecanismo, equipo, tamaño y modo.
+- Verificación: el script de análisis se comprobó con datos sintéticos temporales. Esos datos se usaron para verificar los cálculos; las mediciones experimentales siguen pendientes.
+- Aportes publicados: [dependencias e hipótesis](https://github.com/iMouraad/PE-U1-MPZ/commit/06b09be470f6cc1f77d8f8b6a40be9c13855f3cc) y [script de análisis](https://github.com/iMouraad/PE-U1-MPZ/commit/f7cb1edbd9493d57c989a1cf0675eb7d19c0a8c7).
+- Problemas encontrados y solución: todavía faltaban los CSV de mediciones. Se definió un formato provisional, pendiente de contrastarlo con los archivos que generen sockets y gRPC.
+
+## Miércoles 18/11/2026 — Sesión de Melanie
+
+- Integrante: Melanie Muñoz.
+- Qué hicimos: revisamos los archivos nuevos del equipo y, con apoyo de Codex, preparamos analysis/verificar_lamport.py para comprobar los CSV reales de sockets. El script empareja envíos y recepciones por id_mensaje, revisa las contrapartes y comprueba las actualizaciones locales del reloj desde cero.
+- Resultados: los tres archivos contienen 42 eventos y 21 mensajes completos. Los 21 mensajes cumplen reloj de recepción mayor que reloj de envío y las 42 actualizaciones cumplen las reglas de Lamport.
+- Concurrencia: se identificó el envío de cf648d87 en nodo-A y la recepción de a5cbb3c7 en nodo-B, ambos con reloj 2. No existe un camino causal entre ellos usando el orden local y los mensajes registrados en esta corrida.
+- Verificación: comprobamos el verificador con los datos reales y con copias temporales alteradas para detectar registros incompletos o incorrectos. Los CSV originales conservan sus hashes SHA-256.
+- Evidencia: Melanie ejecutó el verificador en PowerShell en su equipo Melanir. La captura original muestra el usuario melanir\melanie, la fecha y hora del sistema y los resultados completos: [captura de verificación](evidencias/melanie-verificacion-lamport.png). El verificador, la captura y esta bitácora se incorporan juntos en esta entrega.
+- Pendiente: recibir las mediciones de latencia de ambos mecanismos, ajustar el análisis al formato real y generar las tablas y gráficos.
