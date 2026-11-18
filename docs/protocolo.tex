@@ -1,0 +1,120 @@
+% Sección para integrar desde docs/ con \input{protocolo.tex}.
+% Requiere amsmath, booktabs, tabularx e hyperref.
+\section{Protocolo experimental}
+\label{sec:protocolo}
+
+\subsection{Diseño de la comparación}
+Se compararán sockets TCP con mensajes JSON y gRPC con Protocol Buffers
+en tres nodos: nodo-A, nodo-B y nodo-C. Cada integrante ejecutará las
+pruebas en su propio equipo. Los resultados se agruparán por máquina,
+mecanismo, tamaño de mensaje y modo de ejecución para conservar las
+condiciones de cada prueba.
+
+El protocolo está preparado para las siguientes corridas. Su ejecución
+y las cantidades obtenidas se confirmarán con los CSV originales.
+
+\begin{table}[htbp]
+\centering
+\caption{Condiciones previstas para ambos mecanismos en cada equipo.}
+\label{tab:condiciones-protocolo}
+\small
+\begin{tabularx}{\linewidth}{lXX}
+\toprule
+\textbf{Condición} & \textbf{Secuencial} & \textbf{Concurrente} \\
+\midrule
+Clientes activos & Un cliente envía y espera cada respuesta & Tres clientes envían a la vez \\
+Tamaños previstos & Aproximadamente 100 bytes y 10 KB & Los mismos tamaños \\
+Calentamiento & Una corrida previa descartada por tamaño & Una corrida previa descartada por tamaño \\
+Repeticiones & Al menos 5 corridas de 100 envíos por tamaño & Al menos una prueba; cantidad final pendiente \\
+Control de comparación & Mismo contenido, equipo y límites de medición & Mismo contenido y carga total entre mecanismos \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Se propone usar 100 y 10\,240 bytes de contenido útil, medidos después de
+codificar el texto en UTF-8. Falta confirmar estos tamaños con quienes
+implementan los clientes. También se documentará si se mide solo el
+contenido o el mensaje serializado completo, porque JSON y Protocol
+Buffers añaden campos y codificaciones diferentes.
+
+\subsection{Entorno que se registrará}
+El requisito del entorno es Python 3.11 o superior. Las dependencias
+declaradas en \texttt{requirements.txt} son grpcio 1.85.1,
+grpcio-tools 1.85.1, protobuf 7.36.2, pandas 3.1.1 y matplotlib 3.11.2.
+La instalación de estas versiones ya se comprobó en un entorno virtual
+con Python 3.14; la versión usada por cada integrante durante las
+mediciones se registrará por separado.
+
+\begin{table}[htbp]
+\centering
+\caption{Información pendiente de registrar para cada equipo de ejecución.}
+\small
+\begin{tabularx}{\linewidth}{lX}
+\toprule
+\textbf{Dato} & \textbf{Qué se debe completar} \\
+\midrule
+Identificación & Integrante, usuario y nombre de la máquina \\
+Sistema y recursos & Sistema operativo y versión, procesador y memoria RAM \\
+Entorno Python & Versión exacta y dependencias instaladas durante la corrida \\
+Despliegue & Procesos en localhost o contenedores; puertos de ambos mecanismos \\
+Condiciones de ejecución & Fecha, hora, programas abiertos y orden de las pruebas \\
+Código ejecutado & Commit y comandos usados para reproducir las corridas \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Medición y registro}
+Antes de medir, se comprobará que los tres nodos estén disponibles.
+Para cada condición se realizará el calentamiento y se conservará su
+registro con la etiqueta correspondiente, de modo que el análisis pueda
+excluirlo. Después se ejecutarán las repeticiones válidas.
+
+La latencia de ida y vuelta (RTT) se medirá en el cliente con
+\texttt{time.perf\_counter()}. Como criterio propuesto, el intervalo
+comenzará antes de preparar y enviar la solicitud y terminará al recibir
+y decodificar su respuesta. Ambos mecanismos deberán utilizar los mismos
+límites. Falta confirmar en el código si la conexión se reutiliza y si
+su establecimiento queda fuera del intervalo. Estas decisiones se
+registrarán antes de la corrida final.
+
+En la prueba concurrente se acordará un inicio común para los tres
+clientes. El tiempo total de la corrida se medirá una sola vez, desde
+el comienzo de la carga hasta que termine el último cliente. Falta
+confirmar cuántos mensajes envía cada cliente y cuántos completan la
+corrida.
+
+El formato provisional que acepta \texttt{analysis/analizar.py} incluye
+equipo, corrida, modo, bytes del mensaje, identificador único, RTT en
+milisegundos, duración total de la corrida en segundos y etiqueta de
+calentamiento. La duración total se repite en las filas de una misma
+corrida. Cuando se reciban los CSV reales se comprobarán los nombres,
+las unidades y su correspondencia con estas variables.
+
+Los fallos y tiempos de espera se documentarán en la bitácora. Una
+corrida incompleta se conservará identificada y se repetirá según el plan
+del grupo. Los CSV originales se guardarán en \texttt{data/} y se
+generará \texttt{SHA256SUMS} para comprobar su integridad.
+
+\subsection{Tratamiento de los resultados}
+El script calculará la media, mediana, desviación estándar muestral y
+percentil 95 de las latencias válidas de cada condición. El rendimiento
+agregado se obtendrá mediante
+\[
+ R = \frac{\text{total de mensajes completados}}
+          {\text{suma de las duraciones de las corridas válidas}}.
+\]
+En concurrencia, cada duración se cuenta una sola vez por corrida.
+
+Las tablas de latencia y rendimiento se exportarán a CSV y LaTeX.
+El diagrama de cajas mostrará la distribución de las latencias por
+mensaje. El gráfico de barras mostrará la media de las medias por corrida
+y barras de error de una desviación estándar muestral entre corridas.
+Si solo hay una corrida, el gráfico indicará esa cantidad y omitirá
+la barra de error. Los tamaños, modos y equipos se mantendrán identificados.
+
+\subsection{Pendientes para cerrar el protocolo}
+Falta incorporar los CSV reales de latencia de ambos mecanismos,
+confirmar los tamaños efectivos y la política de conexiones,
+registrar el entorno de cada equipo y completar la prueba concurrente.
+Las tablas, gráficos y conclusiones experimentales se generarán después
+de comprobar esos registros.
