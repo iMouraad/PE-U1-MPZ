@@ -1,0 +1,85 @@
+% Fragmentos leídos directamente de analysis/analizar.py mediante listings.
+\section{Implementación del script de análisis}
+\label{sec:implementacion-analisis}
+
+El archivo \texttt{analysis/analizar.py} transforma los CSV de latencia
+en resúmenes, tablas y figuras. Recibe los archivos de cada mecanismo
+por separado mediante \texttt{--sockets} y \texttt{--grpc}. Cada fila
+representa un mensaje completado. El formato de entrada sigue pendiente
+de contrastarse con los CSV reales de las implementaciones.
+
+\subsection{Lectura y validación de los registros}
+La función \texttt{leer\_csv} utiliza pandas para leer los campos
+inicialmente como texto. La codificación \texttt{utf-8-sig} permite
+leer también un CSV que tenga una marca BOM. Después se comprueba que
+estén presentes las columnas requeridas:
+
+\lstinputlisting[firstline=37,lastline=40]{../analysis/analizar.py}
+
+La validación rechaza campos vacíos, modos distintos de secuencial o
+concurrente y etiquetas de calentamiento diferentes de 0 y 1.
+El tamaño del mensaje, la latencia y la duración deben ser positivos y
+finitos; además, el tamaño debe ser entero. El mecanismo se añade a los
+registros a partir del argumento usado al cargar el archivo.
+
+En \texttt{resumir} se revisa que cada identificador sea único dentro de
+su corrida y que todas sus filas tengan la misma duración y etiqueta
+de calentamiento. Si se encuentra una inconsistencia, el programa
+termina con un mensaje de error.
+
+\subsection{Calentamiento y estadísticas de latencia}
+Las filas marcadas con 1 corresponden al calentamiento. Para calcular
+las estadísticas se seleccionan las que tienen la etiqueta 0:
+
+\lstinputlisting[firstline=71,lastline=71]{../analysis/analizar.py}
+
+La agrupación \texttt{GRUPO} contiene mecanismo, equipo, modo y tamaño
+en bytes. Así se conserva una fila de resultados por condición.
+La latencia se expresa en milisegundos y se resume mediante:
+
+\lstinputlisting[firstline=75,lastline=81]{../analysis/analizar.py}
+
+La media utiliza todos los mensajes válidos del grupo; la mediana
+representa su posición central. \texttt{std} calcula la desviación
+estándar muestral, con divisor $n-1$. El percentil 95 se obtiene con
+la interpolación lineal predeterminada de \texttt{quantile}.
+Si solo existe una observación, la desviación muestral queda sin definir
+y se presenta como N/D.
+
+\subsection{Rendimiento y duración de las corridas}
+La clave \texttt{CORRIDA} añade el identificador de repetición a las
+variables de agrupación. Como la duración total está repetida en cada
+fila del CSV, se toma una sola vez antes de sumar los tiempos:
+
+\lstinputlisting[firstline=82,lastline=90]{../analysis/analizar.py}
+
+El rendimiento agregado divide los mensajes completados entre ese
+tiempo total. En concurrencia se necesita la duración común de los tres
+clientes, desde el comienzo de la carga hasta que termine el último.
+La suma de las latencias individuales mide otra cantidad, porque
+las solicitudes pueden solaparse.
+
+\subsection{Tablas y gráficos generados}
+La opción \texttt{--informe} crea una carpeta nueva con
+\texttt{resumen.csv}, \texttt{por\_corrida.csv}, dos tablas LaTeX y
+los gráficos de cajas y barras en PNG y PDF.
+\texttt{escribir\_tabla} convierte los resultados a fragmentos LaTeX
+y escapa caracteres especiales de los identificadores.
+
+El diagrama de cajas usa las latencias individuales. Para las barras,
+\texttt{resumen\_corridas} calcula primero la media de cada corrida.
+El siguiente fragmento dibuja su media y la desviación estándar entre
+corridas:
+
+\lstinputlisting[firstline=195,lastline=198]{../analysis/analizar.py}
+
+Las dos desviaciones tienen alcances distintos: la tabla describe la
+variación entre mensajes y la barra de error describe la variación
+entre las medias de las corridas. Cada barra indica cuántas corridas
+se utilizaron. Si solo hay una, se omite la barra de error.
+
+\subsection{Estado de la comprobación}
+El script se comprobó con datos sintéticos temporales: ocho condiciones,
+cinco corridas válidas de 100 mensajes y calentamiento excluido por
+condición. Contrastamos los cálculos con NumPy y revisamos tablas y
+gráficos. La aplicación a los CSV reales de sockets y gRPC sigue pendiente.

@@ -3,6 +3,21 @@
 \usepackage[spanish,es-tabla]{babel}
 \usepackage[margin=2cm]{geometry}
 \usepackage{amsmath,booktabs,tabularx,graphicx,caption,pdflscape}
+\usepackage{listings}
+\lstset{
+  language=Python,
+  basicstyle=\ttfamily\footnotesize,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  breaklines=true,
+  frame=single,
+  framesep=4pt,
+  xleftmargin=4pt,
+  xrightmargin=4pt,
+  aboveskip=7pt,
+  belowskip=7pt
+}
 \usepackage{csquotes}
 \usepackage[backend=biber,style=ieee]{biblatex}
 \addbibresource{referencias.bib}
@@ -17,6 +32,7 @@
 {\small PE-U1 / GA-SUM-01 \hfill Equipo MPZ\par}
 {\Large\bfseries Comunicación entre procesos con sockets TCP y gRPC\par}
 \input{hipotesis.tex}
+\input{analisis.tex}
 \input{protocolo.tex}
 \clearpage
 \input{lamport.tex}
