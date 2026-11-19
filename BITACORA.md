@@ -23,8 +23,6 @@
 
 ### Martes 17/11/2026 — Sesión de Melanie
 
-> **Uso de IA en las sesiones de Melanie (17–19/11/2026):** Se utilizó Codex de OpenAI como apoyo en la consulta de fuentes, generación y revisión de código, ejecución asistida de pruebas, preparación de borradores y formato LaTeX. Esta nota se aplica a las entradas de Melanie de esas fechas.
-
 - **Integrante:** Melanie Muñoz.
 - **Qué hicimos:** definí las dependencias en `requirements.txt`, redacté el objetivo y la hipótesis en `docs/hipotesis.tex` y estructuré `analysis/analizar.py` para calcular métricas de latencia y rendimiento, descartando el calentamiento y agrupando por mecanismo, equipo, tamaño y modo. Comprobé el entorno en Python 3.14 y la compilación del fragmento.
 - **Verificación:** probé el script con datos sintéticos temporales para validar los cálculos antes de contar con las mediciones reales.
