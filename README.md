@@ -38,7 +38,9 @@ Para compilar la versión actual con pdfLaTeX desde la raíz del repositorio:
 ```text
 cd docs
 pdflatex -interaction=nonstopmode -halt-on-error informe.tex
+biber informe
+pdflatex -interaction=nonstopmode -halt-on-error informe.tex
 pdflatex -interaction=nonstopmode -halt-on-error informe.tex
 ```
 
-Se necesita una distribución LaTeX con babel (español), amsmath, booktabs, tabularx, graphicx, caption, pdflscape e hyperref. La captura se carga desde evidencias/, por lo que debe conservarse la estructura de carpetas al compilar.
+Se necesita una distribución LaTeX con babel (español), amsmath, booktabs, tabularx, graphicx, caption, pdflscape, csquotes, biblatex con estilo IEEE, Biber e hyperref. La bibliografía se lee desde docs/referencias.bib. La captura se carga desde evidencias/, por lo que debe conservarse la estructura de carpetas al compilar.

@@ -1,5 +1,5 @@
 % Sección para integrar con \input{lamport.tex} desde docs/.
-% Requiere amsmath, booktabs, graphicx, caption, pdflscape e hyperref.
+% Requiere amsmath, booktabs, graphicx, caption, pdflscape, hyperref y biblatex.
 \section{Verificación del reloj de Lamport}
 \label{sec:lamport}
 
@@ -18,6 +18,8 @@ Al recibir un mensaje, debe cumplirse
 $L_{\mathrm{nuevo}}=\max(L_{\mathrm{local}},L_{\mathrm{enviado}})+1$.
 También se comprueba que
 $L_{\text{recepción}}>L_{\text{envío}}$ para cada mensaje.
+Estas reglas siguen el tratamiento de relojes lógicos y orden causal
+de van Steen y Tanenbaum \cite{vansteen2023distributed}.
 La comprobación se ejecuta desde la raíz del repositorio:
 
 \begin{quote}\small\ttfamily
@@ -72,7 +74,8 @@ El recíproco no permite deducir causalidad: un valor menor tampoco
 basta para afirmar que hubo influencia entre dos eventos.
 Para este ejemplo, la concurrencia se contrasta con las relaciones de
 los registros completos de la corrida. La diferencia entre las horas
-físicas no establece por sí sola una relación causal.
+físicas no establece por sí sola una relación causal
+\cite{vansteen2023distributed}.
 
 \begin{landscape}
 \subsection{Evidencia de ejecución}

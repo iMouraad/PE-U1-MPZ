@@ -1,5 +1,5 @@
 % Sección para integrar desde docs/ con \input{protocolo.tex}.
-% Requiere amsmath, booktabs, tabularx e hyperref.
+% Requiere amsmath, booktabs, tabularx, hyperref y biblatex con referencias.bib.
 \section{Protocolo experimental}
 \label{sec:protocolo}
 
@@ -9,6 +9,13 @@ en tres nodos: nodo-A, nodo-B y nodo-C. Cada integrante ejecutará las
 pruebas en su propio equipo. Los resultados se agruparán por máquina,
 mecanismo, tamaño de mensaje y modo de ejecución para conservar las
 condiciones de cada prueba.
+
+TCP ofrece un flujo de bytes fiable y ordenado \cite{eddy2022tcp}.
+La delimitación de los mensajes JSON corresponde a nuestra aplicación.
+Para describir la base de transporte de gRPC se usará la especificación
+HTTP/2, que define los flujos y las tramas de la conexión
+\cite{thomson2022http2}. La comparación empírica deberá considerar
+también el formato de serialización \cite{jackson2024streaming}.
 
 El protocolo está preparado para las siguientes corridas. Su ejecución
 y las cantidades obtenidas se confirmarán con los CSV originales.
@@ -111,10 +118,3 @@ mensaje. El gráfico de barras mostrará la media de las medias por corrida
 y barras de error de una desviación estándar muestral entre corridas.
 Si solo hay una corrida, el gráfico indicará esa cantidad y omitirá
 la barra de error. Los tamaños, modos y equipos se mantendrán identificados.
-
-\subsection{Pendientes para cerrar el protocolo}
-Falta incorporar los CSV reales de latencia de ambos mecanismos,
-confirmar los tamaños efectivos y la política de conexiones,
-registrar el entorno de cada equipo y completar la prueba concurrente.
-Las tablas, gráficos y conclusiones experimentales se generarán después
-de comprobar esos registros.

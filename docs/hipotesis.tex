@@ -13,3 +13,11 @@ HTTP/2 podría pesar más que el ahorro de serializar el mensaje con
 Protocol Buffers. Compararemos también los mensajes de aproximadamente
 10 KB y el caso de tres clientes concurrentes para ver cómo cambian la
 latencia y el rendimiento en esas condiciones.
+
+Como antecedentes, Blinowski y Pełka comparan varios mecanismos RPC con
+diferentes tamaños de argumentos y cargas de clientes
+\cite{blinowski2026rpc}. Jackson, Cummings y Khan estudian conjuntamente
+las tecnologías de transmisión y los formatos de serialización
+\cite{jackson2024streaming}. Estos trabajos orientan la elección de
+condiciones y la discusión; la hipótesis se evaluará con las mediciones
+de esta implementación.

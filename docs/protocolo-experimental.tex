@@ -3,10 +3,14 @@
 \usepackage[spanish,es-tabla]{babel}
 \usepackage[margin=2cm]{geometry}
 \usepackage{amsmath,booktabs,tabularx}
+\usepackage{csquotes}
+\usepackage[backend=biber,style=ieee]{biblatex}
+\addbibresource{referencias.bib}
 \usepackage[hidelinks]{hyperref}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{4pt}
 \begin{document}
 {\small PE-U1 / GA-SUM-01 \hfill Equipo MPZ\par}
 \input{protocolo.tex}
+\printbibliography[title={Referencias}]
 \end{document}

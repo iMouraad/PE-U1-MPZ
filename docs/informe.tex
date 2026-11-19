@@ -3,10 +3,16 @@
 \usepackage[spanish,es-tabla]{babel}
 \usepackage[margin=2cm]{geometry}
 \usepackage{amsmath,booktabs,tabularx,graphicx,caption,pdflscape}
+\usepackage{csquotes}
+\usepackage[backend=biber,style=ieee]{biblatex}
+\addbibresource{referencias.bib}
+\DefineBibliographyStrings{spanish}{artno={art.}}
 \usepackage[hidelinks]{hyperref}
 \hypersetup{pdftitle={PE-U1: comunicación entre procesos con sockets TCP y gRPC},pdfauthor={Equipo MPZ}}
 \setlength{\parindent}{0pt}
-\setlength{\parskip}{4pt}
+\setlength{\parskip}{3pt}
+\setlength{\textfloatsep}{10pt plus 2pt minus 2pt}
+\setlength{\intextsep}{10pt plus 2pt minus 2pt}
 \begin{document}
 {\small PE-U1 / GA-SUM-01 \hfill Equipo MPZ\par}
 {\Large\bfseries Comunicación entre procesos con sockets TCP y gRPC\par}
@@ -14,4 +20,5 @@
 \input{protocolo.tex}
 \clearpage
 \input{lamport.tex}
+\printbibliography[title={Referencias}]
 \end{document}
