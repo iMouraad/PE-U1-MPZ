@@ -13,6 +13,10 @@ El id_mensaje debe ser único dentro de la corrida, incluso entre clientes.
 Las barras representan la media de las medias por corrida; los intervalos
 son ± una desviación estándar muestral entre esas medias.
 --ejemplo identifica las salidas visuales de una prueba con datos sintéticos.
+
+También admite los CSV nativos de src/sockets/latencia.py. Se indica su modo
+con --sockets o --sockets-concurrente y su equipo con --equipo-sockets.
+Si falta el tiempo total de corrida, duración y rendimiento quedan como N/D.
 """
 
 import argparse
@@ -32,26 +36,52 @@ COLUMNAS = [
 ]
 
 
-def leer_csv(ruta, mecanismo):
+def leer_csv(ruta, mecanismo, modo="secuencial", equipo="sin-registrar"):
     """Carga un CSV y verifica que las unidades y etiquetas sean utilizables."""
     datos = pd.read_csv(ruta, dtype="string", encoding="utf-8-sig")
+    columnas_sockets = {"mecanismo", "tamano_bytes", "corrida", "nodo", "envio", "latencia_ms"}
+    formato_sockets = (
+        mecanismo == "sockets" and columnas_sockets.issubset(datos.columns)
+        and not set(COLUMNAS).issubset(datos.columns)
+    )
+    if formato_sockets:
+        campos_nativos = datos[list(columnas_sockets)]
+        if campos_nativos.isna().any().any() or campos_nativos.apply(
+            lambda columna: columna.str.strip().eq("")
+        ).any().any():
+            raise ValueError(f"{ruta}: el CSV de sockets tiene campos vacíos")
+        if not datos["mecanismo"].eq("sockets").all():
+            raise ValueError(f"{ruta}: el mecanismo declarado no es sockets")
+        datos = datos.rename(columns={"tamano_bytes": "bytes_mensaje"})
+        datos["id_mensaje"] = datos["nodo"] + ":" + datos["envio"]
+        datos = datos.assign(
+            equipo=equipo, modo=modo, duracion_corrida_s=pd.NA,
+            calentamiento=datos["corrida"].eq("0").astype(int).astype("string"),
+        )
     faltantes = sorted(set(COLUMNAS) - set(datos.columns))
     if faltantes:
         raise ValueError(f"{ruta}: faltan columnas: {', '.join(faltantes)}")
 
     datos = datos.loc[:, COLUMNAS].apply(lambda columna: columna.str.strip())
-    if datos.empty or datos.isna().any().any() or datos.eq("").any().any():
+    requeridos = [columna for columna in COLUMNAS if columna != "duracion_corrida_s"]
+    if not formato_sockets:
+        requeridos = COLUMNAS
+    if datos.empty or datos[requeridos].isna().any().any() or datos[requeridos].eq("").any().any():
         raise ValueError(f"{ruta}: el CSV está vacío o tiene campos vacíos")
     if not datos["modo"].isin(["secuencial", "concurrente"]).all():
         raise ValueError(f"{ruta}: modo debe ser secuencial o concurrente")
     if not datos["calentamiento"].isin(["0", "1"]).all():
         raise ValueError(f"{ruta}: calentamiento debe ser 0 o 1")
 
-    for columna in ("bytes_mensaje", "latencia_ms", "duracion_corrida_s"):
+    for columna in ("bytes_mensaje", "latencia_ms"):
         valores = pd.to_numeric(datos[columna], errors="coerce").astype(float)
         if not np.isfinite(valores).all() or not (valores > 0).all():
             raise ValueError(f"{ruta}: {columna} debe contener números positivos y finitos")
         datos[columna] = valores
+    datos["duracion_corrida_s"] = pd.to_numeric(datos["duracion_corrida_s"]).astype(float)
+    duraciones = datos["duracion_corrida_s"]
+    if not formato_sockets and (not np.isfinite(duraciones).all() or not duraciones.gt(0).all()):
+        raise ValueError(f"{ruta}: duracion_corrida_s debe contener números positivos y finitos")
 
     tamanos = datos["bytes_mensaje"]
     if not tamanos.mod(1).eq(0).all():
@@ -83,7 +113,7 @@ def resumir(datos):
         mediciones.groupby(CORRIDA)["duracion_corrida_s"]
         .first()
         .groupby(level=GRUPO)
-        .agg(corridas="size", duracion_total_s="sum")
+        .agg(corridas="size", duracion_total_s=lambda valores: valores.sum(min_count=len(valores)))
     )
     resumen = latencias.join(corridas)
     resumen["mensajes_por_segundo"] = resumen["mensajes"] / resumen["duracion_total_s"]
@@ -181,6 +211,8 @@ def exportar_informe(datos, resumen, destino, ejemplo=False):
                 for posicion, mecanismo in enumerate(colores):
                     valores = seleccion.loc[seleccion["mecanismo"].eq(mecanismo), "latencia_ms"]
                     if valores.empty:
+                        eje.text(posicion, 0.05, "Sin datos\nen este equipo",
+                                 transform=eje.get_xaxis_transform(), ha="center", fontsize=8)
                         continue
                     if nombre == "cajas_latencias":
                         caja = eje.boxplot([valores], positions=[posicion], widths=0.5, patch_artist=True)
@@ -199,6 +231,7 @@ def exportar_informe(datos, resumen, destino, ejemplo=False):
                         eje.text(posicion, muestras.mean(), f"  n={len(muestras)}",
                                  ha="left", va="bottom", fontsize=9)
                 eje.set_xticks([0, 1], ["Sockets TCP", "gRPC"])
+                eje.set_xlim(-0.55, 1.55)
                 eje.set_title(f"{condicion.equipo} · {condicion.modo} · {condicion.bytes_mensaje} B")
                 eje.set_ylabel("Latencia RTT (ms)")
                 eje.grid(axis="y", alpha=0.2)
@@ -226,17 +259,22 @@ def exportar_informe(datos, resumen, destino, ejemplo=False):
 def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--sockets", nargs="+", type=Path, required=True)
+    parser.add_argument("--sockets-concurrente", nargs="+", type=Path, default=[])
+    parser.add_argument("--equipo-sockets", default="sin-registrar",
+                        help="Equipo de los CSV nativos de sockets; indicar solo si está documentado")
     parser.add_argument("--grpc", nargs="+", type=Path, required=True)
     parser.add_argument("--salida", type=Path, help="Ruta opcional para un CSV nuevo con el resumen")
     parser.add_argument("--informe", type=Path, help="Carpeta nueva para tablas, CSV y gráficos")
     parser.add_argument("--ejemplo", action="store_true", help="Marca tablas y figuras como datos sintéticos de prueba")
     args = parser.parse_args()
 
-    entradas = [(ruta, "sockets") for ruta in args.sockets]
-    entradas += [(ruta, "grpc") for ruta in args.grpc]
+    entradas = [(ruta, "sockets", "secuencial") for ruta in args.sockets]
+    entradas += [(ruta, "sockets", "concurrente") for ruta in args.sockets_concurrente]
+    entradas += [(ruta, "grpc", "secuencial") for ruta in args.grpc]
     try:
         mediciones = pd.concat(
-            [leer_csv(ruta, mecanismo) for ruta, mecanismo in entradas], ignore_index=True
+            [leer_csv(ruta, mecanismo, modo, args.equipo_sockets)
+             for ruta, mecanismo, modo in entradas], ignore_index=True
         )
         resumen = resumir(mediciones)
         if args.informe is not None:

@@ -1,0 +1,19 @@
+{
+  "fecha_registro": "2026-11-19",
+  "uso": "Entorno donde se ejecutó el análisis; mediciones propias de latencia pendientes",
+  "usuario": "Melanie",
+  "maquina": "MELANIR",
+  "sistema": "Microsoft Windows 11 Home Single Language",
+  "version": "10.0.26200",
+  "compilacion": "26200",
+  "procesador": "AMD Ryzen 7 5700U with Radeon Graphics",
+  "ram_gib": 15.35,
+  "python": "3.14.4",
+  "dependencias": {
+    "grpcio": "1.85.1",
+    "grpcio-tools": "1.85.1",
+    "protobuf": "7.36.2",
+    "pandas": "3.1.1",
+    "matplotlib": "3.11.2"
+  }
+}

@@ -11,15 +11,20 @@ de contrastarse con los CSV reales de las implementaciones.
 \subsection{Lectura y validación de los registros}
 La función \texttt{leer\_csv} utiliza pandas para leer los campos
 inicialmente como texto. La codificación \texttt{utf-8-sig} permite
-leer también un CSV que tenga una marca BOM. Después se comprueba que
-estén presentes las columnas requeridas:
+leer también un CSV que tenga una marca BOM:
 
-\lstinputlisting[firstline=37,lastline=40]{../analysis/analizar.py}
+\lstinputlisting[firstline=41,lastline=41]{../analysis/analizar.py}
 
-La validación rechaza campos vacíos, modos distintos de secuencial o
+El lector también adapta el formato nativo de seis columnas de sockets.
+Se indican el modo con \texttt{--sockets} o
+\texttt{--sockets-concurrente} y, si está documentado, el equipo con
+\texttt{--equipo-sockets}. Una duración de corrida ausente en ese formato
+deja el rendimiento como N/D.
+La validación rechaza campos vacíos en los datos requeridos, modos distintos de secuencial o
 concurrente y etiquetas de calentamiento diferentes de 0 y 1.
-El tamaño del mensaje, la latencia y la duración deben ser positivos y
-finitos; además, el tamaño debe ser entero. El mecanismo se añade a los
+El tamaño del mensaje y la latencia deben ser positivos y finitos.
+La duración debe cumplir ese criterio en el formato completo; además,
+el tamaño debe ser entero. El mecanismo se añade a los
 registros a partir del argumento usado al cargar el archivo.
 
 En \texttt{resumir} se revisa que cada identificador sea único dentro de
@@ -31,13 +36,13 @@ termina con un mensaje de error.
 Las filas marcadas con 1 corresponden al calentamiento. Para calcular
 las estadísticas se seleccionan las que tienen la etiqueta 0:
 
-\lstinputlisting[firstline=71,lastline=71]{../analysis/analizar.py}
+\lstinputlisting[firstline=101,lastline=101]{../analysis/analizar.py}
 
 La agrupación \texttt{GRUPO} contiene mecanismo, equipo, modo y tamaño
 en bytes. Así se conserva una fila de resultados por condición.
 La latencia se expresa en milisegundos y se resume mediante:
 
-\lstinputlisting[firstline=75,lastline=81]{../analysis/analizar.py}
+\lstinputlisting[firstline=105,lastline=111]{../analysis/analizar.py}
 
 La media utiliza todos los mensajes válidos del grupo; la mediana
 representa su posición central. \texttt{std} calcula la desviación
@@ -51,7 +56,7 @@ La clave \texttt{CORRIDA} añade el identificador de repetición a las
 variables de agrupación. Como la duración total está repetida en cada
 fila del CSV, se toma una sola vez antes de sumar los tiempos:
 
-\lstinputlisting[firstline=82,lastline=90]{../analysis/analizar.py}
+\lstinputlisting[firstline=112,lastline=120]{../analysis/analizar.py}
 
 El rendimiento agregado divide los mensajes completados entre ese
 tiempo total. En concurrencia se necesita la duración común de los tres
@@ -71,7 +76,7 @@ El diagrama de cajas usa las latencias individuales. Para las barras,
 El siguiente fragmento dibuja su media y la desviación estándar entre
 corridas:
 
-\lstinputlisting[firstline=195,lastline=198]{../analysis/analizar.py}
+\lstinputlisting[firstline=227,lastline=230]{../analysis/analizar.py}
 
 Las dos desviaciones tienen alcances distintos: la tabla describe la
 variación entre mensajes y la barra de error describe la variación
@@ -79,7 +84,9 @@ entre las medias de las corridas. Cada barra indica cuántas corridas
 se utilizaron. Si solo hay una, se omite la barra de error.
 
 \subsection{Estado de la comprobación}
-El script se comprobó con datos sintéticos temporales: ocho condiciones,
-cinco corridas válidas de 100 mensajes y calentamiento excluido por
-condición. Contrastamos los cálculos con NumPy y revisamos tablas y
-gráficos. La aplicación a los CSV reales de sockets y gRPC sigue pendiente.
+El script se comprobó inicialmente con datos sintéticos temporales.
+El 19 de noviembre se aplicó a los cuatro CSV reales recibidos y se
+contrastaron sus estadísticas con NumPy. Se conservaron las filas
+originales y se verificó que sus hashes SHA-256 permanecieran iguales
+después del análisis. Los resultados se presentan en la
+sección~\ref{sec:resultados}.

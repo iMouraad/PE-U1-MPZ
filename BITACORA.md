@@ -75,3 +75,14 @@
 - Verificación: comprobamos las columnas requeridas por analysis/analizar.py, los tamaños, las cantidades por corrida y cliente, los tiempos positivos, una sola duración por corrida y la ausencia de identificadores duplicados.
 - Resultados preliminares: en las corridas válidas, la latencia media secuencial fue 0.29 ms para 100 bytes y 0.33 ms para 10 000 bytes; en modo concurrente fue 0.50 ms y 0.56 ms, respectivamente. Melanie realizará el tratamiento estadístico final con los CSV originales.
 - Problemas encontrados: ninguno durante las corridas definitivas.
+
+## Jueves 19/11/2026 — Sesión de Melanie
+
+- Integrante: Melanie Muñoz.
+- Trabajo realizado con apoyo de Codex: revisamos los cuatro CSV reales de latencia y adaptamos analysis/analizar.py al formato nativo de seis columnas de sockets. El modo se indica por argumento y la duración ausente se mantiene como dato desconocido, por lo que su rendimiento aparece como N/D.
+- Resultados del análisis: se leyeron 4000 filas y se excluyeron las 800 de calentamiento de gRPC. Las tablas y gráficos se generaron con 3200 mensajes válidos en ocho condiciones. Ambos mecanismos tienen cinco corridas secuenciales y una concurrente por tamaño.
+- Verificación: contrastamos las estadísticas con NumPy, comprobamos la compatibilidad con el formato completo anterior y verificamos que los CSV originales conservaran sus hashes SHA-256. Se creó data/SHA256SUMS como registro de integridad de los diez CSV disponibles en esta sesión.
+- Lamport de gRPC: el verificador emparejó 21 mensajes y comprobó 42 eventos registrados. Se documentó el alcance de esos registros y que los acuses RPC todavía requieren revisión del reloj y del registro de eventos.
+- Informe: se preparó la sección de resultados preliminares, se sincronizaron los fragmentos de código del análisis y se actualizaron los puertos y el estado de la implementación gRPC. Se incorporó la sección de amenazas a la validez. Se registró el entorno del equipo de Melanie para el análisis en data/entorno_melanie.json. El informe de trece páginas se compiló y revisó antes de publicarlo.
+- Pendientes del grupo: registrar el entorno y la duración total de sockets; revisar el calentamiento concurrente y los límites de medición de ambos mecanismos; ejecutar los dos mecanismos en cada equipo. Los resultados recibidos describen sesiones con condiciones distintas y la comparación final queda pendiente.
+- Estado: el script, las salidas de los CSV reales, las fuentes LaTeX, los PDF, el README, el registro de integridad y esta bitácora se publican juntos en un solo commit.

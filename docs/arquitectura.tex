@@ -59,13 +59,17 @@ comparten cuatro campos. \texttt{sender} identifica al emisor y
 declara como texto, mientras que \texttt{lamport\_clock} es un entero
 de 64 bits destinado al reloj lógico. Al comparar ambos mecanismos,
 el reloj que viaja en \texttt{timestamp} de sockets se corresponderá
-con \texttt{lamport\_clock} de gRPC. El formato y uso del
-\texttt{timestamp} textual se confirmarán en la implementación.
+con \texttt{lamport\_clock} de gRPC. El \texttt{timestamp} textual
+contiene una fecha y hora generada por la implementación gRPC.
 
 Protocol Buffers define el esquema de los mensajes y su codificación
 binaria \cite{jackson2024streaming}. HTTP/2 aporta los flujos y las
 tramas de la conexión utilizada por gRPC \cite{thomson2022http2}.
-Falta incorporar los nodos ejecutables de gRPC, confirmar sus puertos
-y registrar sus intercambios. La misma topología de tres nodos
-servirá como referencia para contrastar las condiciones de ejecución.
+Los nodos ejecutables de gRPC ya están en \texttt{src/grpc/nodo.py}.
+Usan los puertos 50051, 50052 y 50053 para A, B y C, respectivamente,
+con la misma topología entre pares. El campo \texttt{timestamp}
+contiene la hora física como texto y \texttt{lamport\_clock} el
+contador lógico. Las pruebas de latencia tienen servidores de eco
+específicos: sockets escucha en el puerto 5000 y gRPC en el 50054.
+Estos servidores permiten medir la solicitud y su respuesta.
 \endgroup

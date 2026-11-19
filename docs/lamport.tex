@@ -77,6 +77,23 @@ los registros completos de la corrida. La diferencia entre las horas
 físicas no establece por sí sola una relación causal
 \cite{vansteen2023distributed}.
 
+\subsection{Verificación de los registros de gRPC}
+El mismo verificador se ejecutó con los tres CSV
+\texttt{eventos\_grpc\_nodo-*.csv}. Se emparejaron los 21 mensajes
+registrados y se comprobaron sus 42 eventos. Los 21 pares cumplen
+reloj de recepción mayor que reloj de envío, y las 42 actualizaciones
+locales registradas cumplen las reglas del reloj.
+
+En estos archivos, el primer envío de nodo-A
+(\texttt{58cbbdd0}) y el de nodo-B (\texttt{60af6c99})
+tienen reloj 1. El verificador no encuentra un camino causal
+entre ellos usando el orden local y los mensajes registrados.
+El alcance de la comprobación son los mensajes de aplicación
+guardados en los CSV. Los acuses RPC se devuelven al cliente,
+pero el programa actual no los registra como eventos adicionales
+ni actualiza el reloj del emisor al recibirlos. Esa parte deberá
+revisarse para cubrir también los acuses en el modelo de eventos.
+
 \begin{landscape}
 \subsection{Evidencia de ejecución}
 La figura~\ref{fig:lamport-melanie} muestra la ejecución del verificador

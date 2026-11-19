@@ -44,6 +44,16 @@ implementan los clientes. También se documentará si se mide solo el
 contenido o el mensaje serializado completo, porque JSON y Protocol
 Buffers añaden campos y codificaciones diferentes.
 
+\textbf{Estado de las corridas recibidas el 19 de noviembre.}
+Los programas publicados utilizan 100 y 10\,000 bytes de solicitud
+serializada. Los CSV contienen cinco repeticiones secuenciales y una
+concurrente por tamaño y mecanismo. El calentamiento secuencial de
+sockets se descarta dentro del cliente y su prueba concurrente no
+incluye calentamiento. gRPC conserva las filas de calentamiento de
+ambos modos con una etiqueta para excluirlas. Los resultados y las
+diferencias pendientes de controlar se detallan en el apartado de
+resultados del informe integrado.
+
 \subsection{Entorno que se registrará}
 El requisito del entorno es Python 3.11 o superior. Las dependencias
 declaradas en \texttt{requirements.txt} son grpcio 1.85.1,

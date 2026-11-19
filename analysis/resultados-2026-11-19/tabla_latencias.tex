@@ -1,0 +1,21 @@
+\begin{table}[htbp]
+\centering
+\small
+\caption{Mediciones experimentales. Latencias en milisegundos; desviación estándar muestral por mensaje.}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{llllrrrr}
+\toprule
+Equipo & Modo & Bytes & Mecanismo & Media & Mediana & Desv. & P95 \\
+\midrule
+DESKTOP-5MJCPHU & concurrente & 100 & grpc & 0.4980 & 0.4771 & 0.0960 & 0.7042 \\
+DESKTOP-5MJCPHU & concurrente & 10000 & grpc & 0.5557 & 0.5455 & 0.0992 & 0.7308 \\
+DESKTOP-5MJCPHU & secuencial & 100 & grpc & 0.2929 & 0.2772 & 0.0709 & 0.3823 \\
+DESKTOP-5MJCPHU & secuencial & 10000 & grpc & 0.3306 & 0.3057 & 0.0885 & 0.4746 \\
+sin-registrar & concurrente & 100 & sockets & 0.0909 & 0.0787 & 0.0662 & 0.1512 \\
+sin-registrar & concurrente & 10000 & sockets & 0.1458 & 0.1364 & 0.0524 & 0.2083 \\
+sin-registrar & secuencial & 100 & sockets & 0.0520 & 0.0470 & 0.0207 & 0.0682 \\
+sin-registrar & secuencial & 10000 & sockets & 0.0762 & 0.0704 & 0.0218 & 0.0924 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
