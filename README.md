@@ -31,7 +31,7 @@ En desarrollo. Las instrucciones para ejecutar los nodos, el análisis y la comp
 
 ## Informe del grupo
 
-El documento integrado está en [docs/informe.pdf](docs/informe.pdf). Su archivo principal es [docs/informe.tex](docs/informe.tex), que incorpora las secciones de hipótesis, implementación del análisis, protocolo experimental y verificación de Lamport de sockets. El protocolo señala los datos y decisiones pendientes de confirmar.
+El documento integrado está en [docs/informe.pdf](docs/informe.pdf). Su archivo principal es [docs/informe.tex](docs/informe.tex), que incorpora las secciones de hipótesis, arquitectura, implementación del análisis, protocolo experimental y verificación de Lamport de sockets. El protocolo señala los datos y decisiones pendientes de confirmar.
 
 Para compilar la versión actual con pdfLaTeX desde la raíz del repositorio:
 
@@ -43,4 +43,4 @@ pdflatex -interaction=nonstopmode -halt-on-error informe.tex
 pdflatex -interaction=nonstopmode -halt-on-error informe.tex
 ```
 
-Se necesita una distribución LaTeX con babel (español), amsmath, booktabs, tabularx, graphicx, caption, pdflscape, listings, csquotes, biblatex con estilo IEEE, Biber e hyperref. La bibliografía se lee desde docs/referencias.bib. La captura se carga desde evidencias/ y los fragmentos de código desde analysis/analizar.py, por lo que debe conservarse la estructura de carpetas al compilar.
+Se necesita una distribución LaTeX con babel (español), amsmath, booktabs, tabularx, graphicx, caption, pdflscape, TikZ, listings, csquotes, biblatex con estilo IEEE, Biber e hyperref. La bibliografía se lee desde docs/referencias.bib. La captura se carga desde evidencias/, el diagrama editable desde docs/figuras/ y los fragmentos de código desde analysis/analizar.py y proto/communication.proto, por lo que debe conservarse la estructura de carpetas al compilar.

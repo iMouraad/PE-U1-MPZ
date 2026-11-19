@@ -1,0 +1,71 @@
+% Requiere TikZ y listings; compilar desde docs/ con el proyecto completo.
+\section{Arquitectura de los tres nodos}
+\label{sec:arquitectura}
+\begingroup
+\setlength{\emergencystretch}{2em}
+
+\subsection{Procesos y comunicación con sockets}
+El programa \texttt{src/sockets/nodo.py} se ejecuta como tres procesos
+identificados por los nombres nodo-A, nodo-B y nodo-C. Cada proceso
+escucha en una dirección de loopback y un puerto propio. Al mismo
+tiempo, puede enviar mensajes a cualquiera de los otros dos nodos.
+La figura~\ref{fig:arquitectura-nodos} representa esta topología
+implementada para el registro de eventos de Lamport.
+
+\begin{figure}[htbp]
+\centering
+\input{figuras/arquitectura-nodos.tex}
+\caption{Tres procesos TCP en localhost. Las flechas dobles representan
+la posibilidad de enviar mensajes en ambos sentidos entre cada par.}
+\label{fig:arquitectura-nodos}
+\end{figure}
+
+Cada nodo mantiene un contador lógico y un candado para coordinar su
+actualización entre los hilos de envío y recepción. Un hilo escucha
+conexiones entrantes y crea un hilo de atención por conexión.
+El emisor elige un destino, incrementa su reloj y envía un JSON
+codificado en UTF-8, delimitado por un salto de línea.
+TCP proporciona el flujo fiable y ordenado sobre el cual la aplicación
+delimita sus mensajes \cite{eddy2022tcp}.
+
+El JSON contiene \texttt{sender}, \texttt{timestamp} y \texttt{message}.
+En sockets, \texttt{timestamp} transporta el valor entero del reloj de
+Lamport; el identificador de mensaje se incorpora al comienzo de
+\texttt{message}, separado del texto por una barra vertical.
+Cada proceso guarda el nodo, tipo de evento, reloj, hora real,
+identificador y contraparte en su propio CSV.
+
+Este programa registra envíos y recepciones para comprobar el orden
+causal. Para la futura medición RTT se deberá incorporar o confirmar
+un intercambio con respuesta, de modo que el cliente pueda medir
+el ciclo completo de solicitud y acuse.
+
+\subsection{Contrato de gRPC y Protocol Buffers}
+El contrato se define en \texttt{proto/communication.proto} y los
+módulos de Python generados están en \texttt{src/grpc/generated/}.
+El servicio \texttt{CommunicationService} declara una llamada unaria:
+\texttt{ExchangeMessage} recibe una solicitud y devuelve una respuesta.
+El listado siguiente se lee directamente del contrato del repositorio.
+
+\lstinputlisting[
+  language={},
+  morekeywords={syntax,package,service,rpc,returns,message,string,int64},
+  literate={í}{{\'i}}1
+]{../proto/communication.proto}
+
+Los mensajes \texttt{MessageRequest} y \texttt{MessageResponse}
+comparten cuatro campos. \texttt{sender} identifica al emisor y
+\texttt{message} lleva el contenido. El campo \texttt{timestamp} se
+declara como texto, mientras que \texttt{lamport\_clock} es un entero
+de 64 bits destinado al reloj lógico. Al comparar ambos mecanismos,
+el reloj que viaja en \texttt{timestamp} de sockets se corresponderá
+con \texttt{lamport\_clock} de gRPC. El formato y uso del
+\texttt{timestamp} textual se confirmarán en la implementación.
+
+Protocol Buffers define el esquema de los mensajes y su codificación
+binaria \cite{jackson2024streaming}. HTTP/2 aporta los flujos y las
+tramas de la conexión utilizada por gRPC \cite{thomson2022http2}.
+Falta incorporar los nodos ejecutables de gRPC, confirmar sus puertos
+y registrar sus intercambios. La misma topología de tres nodos
+servirá como referencia para contrastar las condiciones de ejecución.
+\endgroup
