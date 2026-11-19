@@ -1,10 +1,13 @@
 \section{Amenazas a la validez}
 \label{sec:validez}
 
-Los siguientes factores podrían afectar las mediciones de sockets y
-gRPC. Las medidas descritas son controles previstos; su cumplimiento
-se comprobará con el código de medición, el registro del entorno y
-los CSV reales.
+Los siguientes factores afectan el alcance de las mediciones de sockets y
+gRPC. Los controles propuestos para el grupo se mantienen como referencia.
+El apartado~\ref{sec:resultados-melanie} documenta cuáles se aplicaron
+en la sesión de Melanir: mismo equipo, una corrida de calentamiento y
+cinco válidas por condición, con duración total registrada. En esa sesión
+no se alternaron los mecanismos ni se registró de forma continua la carga
+de fondo; tampoco se igualaron los límites de serialización del RTT.
 
 \subsection{Condiciones de ejecución}
 Otros programas abiertos, el uso de CPU y memoria, el ahorro de energía

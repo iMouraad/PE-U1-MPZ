@@ -25,13 +25,16 @@
 \addbibresource{referencias.bib}
 \DefineBibliographyStrings{spanish}{artno={art.}}
 \usepackage[hidelinks]{hyperref}
-\hypersetup{pdftitle={PE-U1: comunicación entre procesos con sockets TCP y gRPC},pdfauthor={Equipo MPZ}}
+\hypersetup{pdftitle={GA-SUM-02 — PE-U1 — Práctica Experimental Unidad 1: Comunicación entre Procesos Distribuidos con gRPC y Sockets TCP},pdfauthor={Equipo MPZ}}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{3pt}
 \setlength{\textfloatsep}{10pt plus 2pt minus 2pt}
 \setlength{\intextsep}{10pt plus 2pt minus 2pt}
 \begin{document}
-{\small PE-U1 / GA-SUM-01 \hfill Equipo MPZ\par}
+\hypersetup{pageanchor=false}
+\input{caratula.tex}
+\hypersetup{pageanchor=true}
+{\small PE-U1 / GA-SUM-02 \hfill Equipo MPZ\par}
 {\Large\bfseries Comunicación entre procesos con sockets TCP y gRPC\par}
 \input{hipotesis.tex}
 \input{arquitectura.tex}
@@ -40,6 +43,15 @@
 \input{lamport.tex}
 \input{resultados.tex}
 \clearpage
+\input{resultados-melanie.tex}
+\clearpage
 \input{validez.tex}
+\clearpage
+\input{discusion.tex}
+\input{conclusiones.tex}
+\clearpage
+\input{aportes.tex}
+\input{uso-ia.tex}
+\clearpage
 \printbibliography[title={Referencias}]
 \end{document}

@@ -1,0 +1,34 @@
+\section{Conclusiones}
+\label{sec:conclusiones}
+
+La sesión de Melanir aportó 8\,000 RTT válidos de 40 corridas,
+después de descartar 1\,600 observaciones de calentamiento.
+Con 100 bytes serializados y un cliente secuencial, la mediana de
+sockets fue 0,0901 ms frente a 1,28585 ms en gRPC: un 92,99\,\%
+menor respecto de gRPC. Este resultado respalda la hipótesis para
+las condiciones locales ejecutadas, con la salvedad del tamaño
+serializado frente al contenido útil previsto inicialmente.
+
+La diferencia también se mantuvo al aumentar el tamaño y la carga.
+Con 10\,000 bytes y tres clientes, sockets obtuvo una media de
+0,3553 ms frente a 1,8018 ms en gRPC, un 80,28\,\% menor.
+Las tasas de esa condición fueron 6\,428,64 y 1\,315,57 mensajes/s,
+respectivamente. Estas cifras corresponden al ciclo completo de las
+corridas medido por el programa común y a las implementaciones del
+repositorio; no aíslan la contribución del transporte y la serialización.
+
+En la prueba de eventos de cada mecanismo se comprobaron 21 mensajes
+y 42 actualizaciones locales correctas. También se encontró un par
+de envíos de nodos distintos con reloj 1 sin camino causal registrado.
+El resultado muestra que un reloj lógico no identifica de forma única
+cada evento ni sustituye una hora física. En gRPC queda pendiente
+incluir el acuse en el registro y la actualización del reloj para
+verificar el ciclo RPC completo.
+
+La menor latencia de sockets no resuelve por sí sola la elección
+arquitectónica. El contrato tipado y los plazos explícitos presentes
+en gRPC aportan capacidades que el intercambio TCP actual debe
+implementar por separado. El grupo debe concretar su aplicación al
+PFC y contrastar estos resultados con pruebas comparables en los otros
+equipos. Estas conclusiones se limitan a la sesión propia disponible;
+no sustituyen la revisión final de los datos y aportes de todo el equipo.

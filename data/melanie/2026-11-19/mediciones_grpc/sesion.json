@@ -1,0 +1,13 @@
+{
+  "mecanismo": "grpc",
+  "equipo": "Melanir",
+  "python": "3.14.4",
+  "inicio": "2026-11-19T16:18:49.736842-05:00",
+  "fin": "2026-11-19T16:18:56.640015-05:00",
+  "repeticiones_validas": 5,
+  "calentamiento_por_condicion": 1,
+  "fuente": "src\\grpc\\latencia.py",
+  "sha256_fuente": "307dad946301733f51fa3f0fe20b4bb33b5336fc9c3c923ee7c2ee3ef2e30deb",
+  "duracion_corrida": "Desde antes de crear los clientes hasta finalizar sus conexiones; incluye el grupo de hilos en concurrencia",
+  "latencia_individual": "Según los límites del cliente original; JSON se prepara antes del cronómetro y gRPC serializa durante la llamada"
+}

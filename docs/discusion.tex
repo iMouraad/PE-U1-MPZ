@@ -1,0 +1,111 @@
+\section{Discusión}
+\label{sec:discusion}
+
+\subsection{Contraste de la hipótesis con las pruebas en Melanir}
+La hipótesis planteó una mediana de RTT menor con sockets TCP para
+solicitudes cortas y secuenciales en localhost, usando conexiones ya
+establecidas. En la sesión de Melanir, sockets obtuvo una mediana de
+0,0901 ms frente a 1,28585 ms de gRPC con solicitudes serializadas de
+100 bytes. La mediana de sockets fue un 92,99\,\% menor, calculado
+respecto de gRPC. Esta observación respalda la dirección de la hipótesis
+en las condiciones ejecutadas. La hipótesis se refería aproximadamente
+al contenido del mensaje, mientras la implementación controla el tamaño
+serializado completo; esa diferencia acota su comprobación.
+
+Los porcentajes de esta discusión se calculan con los valores completos
+de \texttt{resumen.csv}, antes del redondeo de las tablas. Para la
+reducción relativa se utiliza
+\[
+ 100\left(1-\frac{\text{latencia de sockets}}{\text{latencia de gRPC}}\right).
+\]
+Las medias secuenciales fueron 0,1136 ms y 1,3079 ms con 100 bytes,
+y 0,1644 ms y 1,4494 ms con 10\,000 bytes, para sockets y gRPC,
+respectivamente. Las reducciones de la media fueron 91,31\,\% y
+88,66\,\%. En concurrencia también se observó menor media en sockets:
+86,21\,\% menos con 100 bytes y 80,28\,\% menos con 10\,000 bytes.
+Estos porcentajes describen esta sesión; no constituyen una ventaja
+universal de sockets sobre gRPC.
+
+El coste de las bibliotecas y del tratamiento de la llamada es una
+explicación compatible con el resultado, pero no se midió por separado.
+El JSON se construye antes de iniciar el cronómetro de sockets; la
+serialización interna de la llamada gRPC queda dentro de su RTT.
+Tampoco se alternó el orden de ejecución de los mecanismos.
+Por tanto, no podemos asignar el porcentaje observado exclusivamente
+a HTTP/2, a Protocol Buffers o a TCP. Para separar esos efectos haría
+falta instrumentar cada etapa y repetir con orden alternado.
+
+\subsection{Rendimiento y concurrencia}
+Con tres clientes y 100 bytes, las tasas agregadas fueron
+11\,836,00 mensajes/s en sockets y 1\,387,18 mensajes/s en gRPC:
+una relación de 8,53 a 1. Con 10\,000 bytes, esa relación bajó a
+4,89 a 1, con 6\,428,64 y 1\,315,57 mensajes/s. El tamaño de la
+solicitud cambió la separación entre las implementaciones, de modo que
+una única carga no habría bastado para describirlas.
+
+La tasa concurrente superó la secuencial en ambos mecanismos, aunque
+también aumentó la latencia media por solicitud. Por ejemplo, sockets
+con 100 bytes pasó de 0,1136 a 0,1866 ms. Enviar desde tres clientes
+permite solapar trabajo y completar más mensajes en conjunto, sin
+asegurar que cada uno termine antes.
+El tiempo total incluye preparación y cierre de clientes y conexiones,
+y el grupo de hilos en concurrencia; las tasas comparan ese ciclo
+completo, no solo solicitudes sobre conexiones preparadas.
+Las barras de error muestran variación entre cinco medias de corrida.
+No se efectuaron contrastes de significación ni se midió el punto de
+saturación del servidor.
+
+\subsection{Desarrollo, tipado y manejo de errores}
+La implementación TCP del repositorio permite ver cada paso: abrir
+el socket, construir el JSON y delimitarlo mediante un salto de línea.
+Para este intercambio pequeño, el flujo resulta directo de seguir.
+El equipo debe conservar por su cuenta el acuerdo sobre campos,
+delimitación y validación. En \texttt{src/sockets/nodo.py}, la recepción
+interpreta el JSON y accede a los campos sin una validación previa
+del esquema; una entrada mal formada puede provocar una excepción.
+
+gRPC requiere mantener el contrato \texttt{.proto} y generar módulos
+antes de ejecutar los nodos. A cambio, los tipos de solicitud y respuesta
+están declarados y el código utiliza la operación
+\texttt{ExchangeMessage}. El esquema diferencia la hora física textual
+del reloj lógico entero. Ese tipado no valida todo el significado:
+el servidor todavía comprueba el emisor y el separador del identificador,
+y devuelve \texttt{INVALID\_ARGUMENT} cuando no son válidos.
+
+El cliente gRPC configura una espera de disponibilidad de 10 segundos
+y un plazo de 5 segundos para la llamada de intercambio. Comprueba
+también el contenido del acuse. El nodo TCP publicado no ofrece un
+acuse de aplicación en su intercambio de eventos ni configura esos
+plazos explícitos. No debe confundirse ese intercambio con los
+servidores de eco utilizados para medir RTT. Estas diferencias afectan
+a la funcionalidad y a la forma de detectar fallos, aunque la sesión
+de latencia no ensayó desconexiones ni solicitudes inválidas.
+Por eso no se puede concluir que una implementación sea más robusta
+a partir de sus tiempos normales.
+
+La verificación del reloj respalda las relaciones registradas, pero
+no mide el tiempo físico entre eventos. En gRPC, el acuse de la llamada
+no se registra como evento adicional ni actualiza el reloj del cliente
+al llegar. Revisar ese recorrido sigue siendo necesario para modelar
+el ciclo completo de solicitud y respuesta.
+
+\subsection{Aplicación al PFC y límites de la decisión}
+\textbf{Pendiente de concretar con el equipo:} identificar el sistema
+del PFC y nombrar una interacción real para cada mecanismo.
+Como criterio provisional, sockets sería una opción para un canal
+interno pequeño cuyo formato y validación pueda mantener el grupo,
+si las nuevas mediciones confirman la importancia de ese ahorro de RTT.
+gRPC sería una opción para operaciones entre servicios que necesiten
+un contrato explícito, solicitudes y respuestas tipadas y plazos
+de llamada. Son criterios de diseño derivados del código disponible;
+no son decisiones ya adoptadas para un proyecto cuyo escenario aún
+no se ha documentado aquí.
+
+Las mediciones en loopback dejan fuera la latencia de una red entre
+máquinas y comparten los recursos del mismo equipo. Como detalla
+el apartado~\ref{sec:validez}, también quedan diferencias de
+serialización y carga de fondo. La elección final debe contrastar
+latencia, contrato, mantenimiento y comportamiento ante fallos en el
+escenario real. Las fuentes de RPC y serialización sitúan esa comparación
+en un marco más amplio \cite{blinowski2026rpc,jackson2024streaming};
+las cifras anteriores proceden únicamente de nuestros CSV.

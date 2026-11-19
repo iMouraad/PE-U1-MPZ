@@ -1,6 +1,6 @@
 {
   "fecha_registro": "2026-11-19",
-  "uso": "Entorno donde se ejecutó el análisis; mediciones propias de latencia pendientes",
+  "uso": "Entorno del análisis y de las mediciones propias de sockets y gRPC del 19 de noviembre de 2026",
   "usuario": "Melanie",
   "maquina": "MELANIR",
   "sistema": "Microsoft Windows 11 Home Single Language",
