@@ -65,3 +65,13 @@
 - Integrantes presentes: Angel Zambrano
 - Qué hicimos: latencia.py para medir la latencia de ida y vuelta con sockets. El nodo-A funciona como servidor de eco en el puerto 5000 y el cliente envía mensajes JSON por una misma conexión, midiendo cada ida y vuelta con time.perf_counter(). Hicimos una corrida de calentamiento (descartada) y 5 corridas de 100 envíos con mensajes de unos 100 bytes y de unos 10 KB, en total 1000 mediciones en data/latencias_sockets.csv. También corrimos la prueba con nodo-A, nodo-B y nodo-C enviando a la vez (600 mediciones en data/latencias_sockets_concurrente.csv).
 - Problemas encontrados: ninguno en esta sesión.
+
+## Jueves 19/11/2026 — Sesión de Steven
+
+- Integrante: Steven Pozo.
+- Qué hicimos: implementamos src/grpc/latencia.py con un servidor de eco y clientes gRPC que reutilizan el canal durante cada corrida y miden cada ida y vuelta con time.perf_counter_ns(). El relleno se ajusta con ByteSize() para que cada solicitud protobuf serializada mida exactamente 100 o 10 000 bytes.
+- Prueba secuencial: ejecutamos una corrida de calentamiento y cinco corridas válidas de 100 mensajes por tamaño. data/latencias_grpc.csv conserva las 1200 mediciones originales e identifica las 200 de calentamiento para descartarlas durante el análisis.
+- Prueba concurrente: ejecutamos nodo-A, nodo-B y nodo-C simultáneamente, cada uno con un canal independiente y 100 mensajes. Se hizo una corrida de calentamiento y una válida por tamaño. data/latencias_grpc_concurrente.csv contiene 1200 filas y repite en cada fila la duración completa de su corrida.
+- Verificación: comprobamos las columnas requeridas por analysis/analizar.py, los tamaños, las cantidades por corrida y cliente, los tiempos positivos, una sola duración por corrida y la ausencia de identificadores duplicados.
+- Resultados preliminares: en las corridas válidas, la latencia media secuencial fue 0.29 ms para 100 bytes y 0.33 ms para 10 000 bytes; en modo concurrente fue 0.50 ms y 0.56 ms, respectivamente. Melanie realizará el tratamiento estadístico final con los CSV originales.
+- Problemas encontrados: ninguno durante las corridas definitivas.

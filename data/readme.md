@@ -26,3 +26,21 @@ Comando de verificación de los eventos:
 ```powershell
 python analysis/verificar_lamport.py "data/eventos_grpc_*.csv"
 ```
+
+### Medición de latencia gRPC
+
+Comandos ejecutados el jueves 19 de noviembre de 2026, desde la raíz del
+repositorio. El servidor se mantuvo abierto en una terminal y cada cliente
+se ejecutó en otra:
+
+```powershell
+python src/grpc/latencia.py servidor
+python src/grpc/latencia.py cliente
+python src/grpc/latencia.py concurrente
+```
+
+La prueba secuencial usa una corrida de calentamiento y cinco corridas
+válidas de 100 envíos para cada tamaño. La prueba concurrente usa tres
+clientes con canales independientes y 100 envíos por cliente; incluye una
+corrida de calentamiento y una válida por tamaño. Los tamaños de 100 y
+10 000 bytes corresponden al tamaño serializado de cada solicitud protobuf.
