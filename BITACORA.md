@@ -59,3 +59,9 @@
 - Documentación del análisis: Melanie, con apoyo de Codex, preparó docs/analisis.tex para explicar la lectura y validación de CSV, el descarte del calentamiento, las agrupaciones, las estadísticas, el rendimiento y las salidas gráficas. Los fragmentos se leen directamente de analysis/analizar.py mediante listings. La sección se integró al informe de siete páginas, se compiló y revisó el PDF, y se actualizaron el README y las dependencias LaTeX. Este avance se publica en un solo commit.
 - Arquitectura: Melanie, con apoyo de Codex, preparó docs/arquitectura.tex y el diagrama editable en TikZ docs/figuras/arquitectura-nodos.tex a partir del código TCP publicado. Se documentaron los tres procesos en localhost, los puertos 5000, 5001 y 5002, sus relojes y los registros de eventos. El contrato gRPC se incluye directamente desde proto/communication.proto.
 - Revisión e integración: se recompiló el informe de ocho páginas y se revisaron el diagrama, el contrato y la presentación del PDF. El README incluye TikZ y las rutas necesarias para compilar. La sección señala que aún falta confirmar los puertos, las conexiones y el uso de los campos timestamp y lamport_clock cuando se incorpore la implementación ejecutable de gRPC.
+
+## Jueves 19/11/2026
+
+- Integrantes presentes: Angel Zambrano
+- Qué hicimos: latencia.py para medir la latencia de ida y vuelta con sockets. El nodo-A funciona como servidor de eco en el puerto 5000 y el cliente envía mensajes JSON por una misma conexión, midiendo cada ida y vuelta con time.perf_counter(). Hicimos una corrida de calentamiento (descartada) y 5 corridas de 100 envíos con mensajes de unos 100 bytes y de unos 10 KB, en total 1000 mediciones en data/latencias_sockets.csv. También corrimos la prueba con nodo-A, nodo-B y nodo-C enviando a la vez (600 mediciones en data/latencias_sockets_concurrente.csv).
+- Problemas encontrados: ninguno en esta sesión.
