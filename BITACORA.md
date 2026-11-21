@@ -107,3 +107,11 @@
 - **Publicación autorizada:** integré los avances locales en un solo commit tras actualizar README y tabla de aportes, recompilar informe y protocolo y reunir scripts, pruebas, capturas, resultados y documentación.
 - **Integridad al clonar:** añadí `.gitattributes` para evitar que Git altere los CSV; restauré los 10 CSV previos de `data/` a su versión original en Git (solo diferían en finales de línea de Windows) y ajusté sus hashes, manteniendo los 12 CSV propios contrastados con la sesión y verificando el conjunto en una copia limpia antes de publicar.
 - **Estado publicado:** los avances se incorporaron en el commit [f0ddec0 — Agrega mis pruebas y actualiza el informe](https://github.com/iMouraad/PE-U1-MPZ/commit/f0ddec0b69d21c72c7e9d70fdaba6014d062dcf6). El PDF publicado tiene 28 páginas.
+
+## Viernes 20/11/2026 — Sesión de Steven
+
+- Integrante: Steven Pozo.
+- Revisión final de gRPC: conservamos sin cambios los CSV originales del 18 y 19 de noviembre para no invalidar el análisis ya integrado. Revisamos los resultados publicados y confirmamos que corresponden a 21 mensajes de Lamport, 1000 mediciones secuenciales válidas y 600 concurrentes válidas, además de sus calentamientos identificados.
+- Integridad: comprobamos que los cinco CSV de eventos y latencia de Steven almacenados en Git coinciden con sus entradas en data/SHA256SUMS. En Windows, la copia de trabajo puede representar finales de línea distintos; la comprobación se hizo sobre los bytes publicados en los objetos de Git, que son los registrados por el equipo.
+- Documentación: completamos la fila de Steven en docs/aportes.tex con sus commits de los días 17, 18 y 19, y añadimos en docs/uso-ia.tex una declaración del alcance de Codex, las verificaciones realizadas y la responsabilidad del estudiante.
+- Pendiente: tomar la captura propia con usuario, equipo, fecha y hora visibles; preparar el video grupal y revisar la explicación del código para la demostración.

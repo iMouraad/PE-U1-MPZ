@@ -30,7 +30,7 @@ El reparto de tareas está en `PLAN_DE_TRABAJO.md`.
 
 En revisión. Esta actualización incorpora las pruebas propias de Melanie del 19 de noviembre de 2026, su análisis y la integración al informe. Se conservan separados los resultados preliminares recibidos de los otros equipos de ejecución.
 
-El PDF de una página del SGA ya fue entregado, según confirmación de Melanie. El informe incluye su fila de aportes y la declaración del uso de Codex en su trabajo. Siguen pendientes las filas y declaraciones de los otros integrantes, la revisión de los aportes del grupo, la aplicación al escenario concreto del PFC y el video grupal con su enlace. La revisión de Lamport de gRPC sigue limitada a los eventos de aplicación registrados, sin cubrir el acuse RPC.
+El PDF de una página del SGA ya fue entregado, según confirmación de Melanie. El informe incluye las filas de aportes y las declaraciones de uso de Codex de Melanie y Steven. Siguen pendientes la fila y la declaración de Angel, la revisión de los aportes del grupo, la aplicación al escenario concreto del PFC y el video grupal con su enlace. La revisión de Lamport de gRPC sigue limitada a los eventos de aplicación registrados, sin cubrir el acuse RPC.
 
 ## Informe del grupo
 
