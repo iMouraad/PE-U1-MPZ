@@ -2,7 +2,6 @@
 \label{sec:aportes}
 
 La tabla recoge los aportes publicados y las evidencias disponibles.
-Angel debe completar su fila con su trabajo y sus propios commits.
 
 \begin{table}[htbp]
 \centering\small
@@ -39,6 +38,22 @@ apartado~\ref{sec:uso-ia}.
 \par 17/11: \href{https://github.com/iMouraad/PE-U1-MPZ/commit/86b5e85ca08861bdac21fcd195c7f05e2df26bcc}{\texttt{86b5e85}}, contrato y código generado.
 \par 18/11: \href{https://github.com/iMouraad/PE-U1-MPZ/commit/f9d406813e207d75d3285e051fc182d5c5de641d}{\texttt{f9d4068}}, nodos gRPC, Lamport y CSV de eventos.
 \par 19/11: \href{https://github.com/iMouraad/PE-U1-MPZ/commit/09ae6a6151b1b87902eeed184d9b445f4ec1622e}{\texttt{09ae6a6}}, latencia y prueba concurrente. \\
+\addlinespace
+Zambrano Yong Angel Daniel
+& Servidor y cliente TCP con mensajes JSON delimitados por salto
+de línea; programa único para los nodos A, B y C (puertos 5000 a 5002)
+con un hilo servidor y envíos a destinos aleatorios; reloj de Lamport
+protegido con \texttt{threading.Lock} y registro de 42 eventos en CSV.
+Medición de latencia de sockets del 19/11 (1000 mediciones secuenciales
+y 600 concurrentes) y sesión propia del 22/11 en el equipo Mourad con
+\texttt{medir\_equipo.py}, para sockets y gRPC (4800 filas por mecanismo).
+El uso de IA se detalla en el apartado~\ref{sec:uso-ia}.
+& \textbf{Publicado:}
+\par 17/11: \href{https://github.com/iMouraad/PE-U1-MPZ/commit/f2cda2fa390289f92c147001083e2d4a762343cc}{\texttt{f2cda2f}}, servidor y cliente TCP.
+\par 18/11: \href{https://github.com/iMouraad/PE-U1-MPZ/commit/6fb25f72f4438cb471d621e66ba2cf425eb21fca}{\texttt{6fb25f7}}, nodos con Lamport; \href{https://github.com/iMouraad/PE-U1-MPZ/commit/9aff082a660cc7bc8fe8e712b92db156136886a0}{\texttt{9aff082}}, CSV de eventos.
+\par 19/11: \href{https://github.com/iMouraad/PE-U1-MPZ/commit/203b1fd3ab3fcb19ec392932d67e47eec7e497e1}{\texttt{203b1fd}}, medición de latencia; \href{https://github.com/iMouraad/PE-U1-MPZ/commit/2feec51154b9d10b508b5b6a0db44be563d4bd69}{\texttt{2feec51}}, datos.
+\par 22/11: \href{https://github.com/iMouraad/PE-U1-MPZ/commit/3252cc245fddf07cfb16efb3e48a4afebcca5b2a}{\texttt{3252cc2}}, mediciones propias; \href{https://github.com/iMouraad/PE-U1-MPZ/commit/482082ad641d33e25c9be1332f30d0496e3556f7}{\texttt{482082a}}, hashes.
+\par Capturas 00 a 03 en \texttt{evidencias/}. \\
 \bottomrule
 \end{tabularx}
 \end{table}
