@@ -1,0 +1,17 @@
+{
+  "fecha_registro": "2026-11-22",
+  "uso": "Entorno de las mediciones propias de sockets y gRPC del 22 de noviembre de 2026",
+  "usuario": "angel",
+  "maquina": "Mourad",
+  "sistema": "Microsoft Windows 11 Pro",
+  "procesador": "Intel(R) Core(TM) i7-10700 CPU @ 2.90GHz",
+  "ram_gib": 15.8,
+  "python": "3.14.2",
+  "dependencias": {
+    "grpcio": "1.85.1",
+    "grpcio-tools": "1.85.1",
+    "protobuf": "7.36.2",
+    "pandas": "3.1.1",
+    "matplotlib": "3.11.2"
+  }
+}
