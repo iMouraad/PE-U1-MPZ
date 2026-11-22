@@ -1,0 +1,13 @@
+{
+  "mecanismo": "grpc",
+  "equipo": "Mourad",
+  "python": "3.14.2",
+  "inicio": "2026-11-22T08:31:29.671203-05:00",
+  "fin": "2026-11-22T08:31:35.752999-05:00",
+  "repeticiones_validas": 5,
+  "calentamiento_por_condicion": 1,
+  "fuente": "src\\grpc\\latencia.py",
+  "sha256_fuente": "d964fb2cf5150c7d33313d66188f123a08160a7b39b70241f28d219bb9461710",
+  "duracion_corrida": "Desde antes de crear los clientes hasta finalizar sus conexiones; incluye el grupo de hilos en concurrencia",
+  "latencia_individual": "Según los límites del cliente original; JSON se prepara antes del cronómetro y gRPC serializa durante la llamada"
+}

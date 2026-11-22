@@ -1,0 +1,13 @@
+{
+  "mecanismo": "sockets",
+  "equipo": "Mourad",
+  "python": "3.14.2",
+  "inicio": "2026-11-22T08:30:44.629424-05:00",
+  "fin": "2026-11-22T08:30:45.608931-05:00",
+  "repeticiones_validas": 5,
+  "calentamiento_por_condicion": 1,
+  "fuente": "src\\sockets\\latencia.py",
+  "sha256_fuente": "24ee77f81c3e886db5c50ccfce0e5e4e51bd678101293fe3e2fc10d33fc8664d",
+  "duracion_corrida": "Desde antes de crear los clientes hasta finalizar sus conexiones; incluye el grupo de hilos en concurrencia",
+  "latencia_individual": "Según los límites del cliente original; JSON se prepara antes del cronómetro y gRPC serializa durante la llamada"
+}
