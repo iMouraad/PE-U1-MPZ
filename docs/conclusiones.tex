@@ -1,34 +1,37 @@
 \section{Conclusiones}
 \label{sec:conclusiones}
+La integración final reúne 21\,600 RTT válidos en 112 corridas,
+después de excluir 4\,800 observaciones de calentamiento. Los datos
+se mantienen separados en tres equipos con mediciones de ambos
+mecanismos. Las condiciones secuenciales tienen cinco repeticiones;
+gRPC concurrente de Steven conserva una por tamaño.
 
-La sesión de Melanir aportó 8\,000 RTT válidos de 40 corridas,
-después de descartar 1\,600 observaciones de calentamiento.
-Con 100 bytes serializados y un cliente secuencial, la mediana de
-sockets fue 0,0901 ms frente a 1,28585 ms en gRPC: un 92,99\,\%
-menor respecto de gRPC. Este resultado respalda la hipótesis para
-las condiciones locales ejecutadas, con la salvedad del tamaño
-serializado frente al contenido útil previsto inicialmente.
+La dirección de la hipótesis se observó en los tres equipos para
+100 bytes y envíos secuenciales: las medianas de sockets/gRPC fueron
+0,0901/1,28585 ms en Melanir, 0,0479/0,33505 ms en Mourad y
+0,0231/0,27715 ms en DESKTOP-5MJCPHU. En Melanir, la mediana de
+sockets fue un 92,99\,\% menor respecto de gRPC; este porcentaje
+no se extrapola a las otras máquinas ni a redes físicas.
 
-La diferencia también se mantuvo al aumentar el tamaño y la carga.
-Con 10\,000 bytes y tres clientes, sockets obtuvo una media de
-0,3553 ms frente a 1,8018 ms en gRPC, un 80,28\,\% menor.
-Las tasas de esa condición fueron 6\,428,64 y 1\,315,57 mensajes/s,
-respectivamente. Estas cifras corresponden al ciclo completo de las
-corridas medido por el programa común y a las implementaciones del
-repositorio; no aíslan la contribución del transporte y la serialización.
+Con 10\,000 bytes y tres clientes en Mourad, las medias fueron
+0,1639 ms en sockets y 0,6005 ms en gRPC. Los resultados describen
+las implementaciones ensayadas: no aíslan el transporte, porque
+la serialización y los intervalos de cronometraje difieren. Las
+tasas concurrentes de Steven requieren especial cautela por su
+distinto número de corridas y la preparación de canales excluida
+del intervalo gRPC.
 
-En la prueba de eventos de cada mecanismo se comprobaron 21 mensajes
-y 42 actualizaciones locales correctas. También se encontró un par
-de envíos de nodos distintos con reloj 1 sin camino causal registrado.
-El resultado muestra que un reloj lógico no identifica de forma única
-cada evento ni sustituye una hora física. En gRPC queda pendiente
-incluir el acuse en el registro y la actualización del reloj para
-verificar el ciclo RPC completo.
+Las series iniciales de Lamport verificaron 21 relaciones y 42
+eventos por corrida. Tras incorporar los acuses, la sesión gRPC de
+Steven del 21/11 comprobó 42 relaciones causales y 84 actualizaciones
+locales correctas. Dos envíos de nodos distintos con reloj 1 carecen
+de camino causal en esos registros: Lamport ordena la precedencia
+registrada, pero no asigna una marca única a cada evento.
 
-La menor latencia de sockets no resuelve por sí sola la elección
-arquitectónica. El contrato tipado y los plazos explícitos presentes
-en gRPC aportan capacidades que el intercambio TCP actual debe
-implementar por separado. El grupo debe concretar su aplicación al
-PFC y contrastar estos resultados con pruebas comparables en los otros
-equipos. Estas conclusiones se limitan a la sesión propia disponible;
-no sustituyen la revisión final de los datos y aportes de todo el equipo.
+Para el SGIRI documentado por Angel, gRPC aporta un contrato tipado
+en la consulta de incidencias al servicio de técnicos; sockets es
+una opción para un canal interno simple de estado de equipos de red.
+Estas son elecciones de diseño sustentadas en el contrato y el tipo
+de interacción, no pruebas de rendimiento o tolerancia a fallos del
+PFC. El grupo conserva código, CSV, hashes y evidencias para reproducir
+el análisis y sustentar sus aportes.

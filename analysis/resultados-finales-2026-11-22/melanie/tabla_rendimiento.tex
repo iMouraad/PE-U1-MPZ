@@ -1,0 +1,21 @@
+\begin{table}[htbp]
+\centering
+\small
+\caption{Mediciones experimentales. Rendimiento agregado: mensajes completados / tiempo total de corridas.}
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%
+\begin{tabular}{llllrrrr}
+\toprule
+Equipo & Modo & Bytes & Mecanismo & Mensajes & Corridas & Tiempo (s) & Mensajes/s \\
+\midrule
+Melanir & concurrente & 100 & grpc & 1500 & 5 & 1.0813 & 1387.1761 \\
+Melanir & concurrente & 10000 & grpc & 1500 & 5 & 1.1402 & 1315.5749 \\
+Melanir & secuencial & 100 & grpc & 500 & 5 & 1.0615 & 471.0216 \\
+Melanir & secuencial & 10000 & grpc & 500 & 5 & 1.0658 & 469.1280 \\
+Melanir & concurrente & 100 & sockets & 1500 & 5 & 0.1267 & 11836.0004 \\
+Melanir & concurrente & 10000 & sockets & 1500 & 5 & 0.2333 & 6428.6440 \\
+Melanir & secuencial & 100 & sockets & 500 & 5 & 0.0728 & 6868.0847 \\
+Melanir & secuencial & 10000 & sockets & 500 & 5 & 0.1182 & 4229.0701 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}

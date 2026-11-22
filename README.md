@@ -30,13 +30,29 @@ El reparto de tareas está en `PLAN_DE_TRABAJO.md`.
 
 En revisión. Esta actualización incorpora las pruebas propias de Melanie del 19 de noviembre de 2026, su análisis y la integración al informe. Se conservan separados los resultados preliminares recibidos de los otros equipos de ejecución.
 
-El PDF de una página del SGA ya fue entregado, según confirmación de Melanie. El informe incluye las filas de aportes y las declaraciones de uso de IA de los tres integrantes, la aplicación de cada mecanismo al PFC (SGIRI) y las pruebas propias de Melanie (19/11), Steven (21/11) y Angel (22/11). Los datos de Melanie del 19 de noviembre conservan el alcance original sin acuses; la sesión posterior de Steven del 21 de noviembre registra y verifica también cada acuse RPC. Video del grupo: (enlace pendiente).
+El PDF de una página del SGA ya fue entregado, según confirmación de Melanie. El informe incluye las filas de aportes y las declaraciones de uso de IA de los tres integrantes, la aplicación de cada mecanismo al PFC (SGIRI) y las pruebas propias de Melanie (19/11), Steven (21/11) y Angel (22/11). Los datos de Melanie del 19 de noviembre conservan el alcance original sin acuses; la sesión posterior de Steven del 21 de noviembre registra y verifica también cada acuse RPC.
+
+## Video de sustentación
+
+**Enlace al video:** pendiente de añadir.
 
 ## Informe del grupo
 
-El documento integrado está en [docs/informe.pdf](docs/informe.pdf). Su archivo principal es [docs/informe.tex](docs/informe.tex), que incorpora la carátula, hipótesis, arquitectura, implementación del análisis, protocolo, verificación de Lamport de ambos mecanismos, resultados preliminares y pruebas propias de Melanie, amenazas a la validez, discusión y conclusiones. El texto distingue las condiciones previstas de las ejecutadas y señala los pendientes del grupo.
+El documento integrado está en [docs/informe.pdf](docs/informe.pdf). Su archivo principal es [docs/informe.tex](docs/informe.tex), que incorpora la carátula, hipótesis, arquitectura, implementación del análisis, protocolo, verificación de Lamport de ambos mecanismos, resultados finales por equipo, las pruebas propias de Melanie, las nuevas capturas de Angel y Steven, amenazas a la validez, discusión y conclusiones. Se distinguen las series históricas sin acuses de la sesión gRPC actualizada y se documentan las diferencias del protocolo realmente ejecutado.
 
 ## Análisis de las mediciones recibidas
+
+La integración final de los tres equipos está en `analysis/resultados-finales-2026-11-22/`, con subcarpetas por integrante. Reúne 26 400 filas originales, 4 800 de calentamiento excluidas y 21 600 mediciones válidas en 112 corridas. No se promedian máquinas distintas. Los CSV fuente se enumeran en `sesiones.json`, las cantidades en `inventario.csv` y la verificación de las cinco sesiones de eventos en `lamport.csv`. Los originales se conservan sin editar.
+
+Para regenerar todas las tablas y figuras finales desde la raíz, usando una carpeta de salida nueva:
+
+```text
+python analysis/integrar_sesiones.py --salida analysis/resultados-finales-revision
+```
+
+Este programa comprueba los hashes, reutiliza `analizar.py` y `verificar_lamport.py` y genera el inventario, los resultados por equipo y las tablas de Lamport. gRPC concurrente de Steven tiene una corrida válida por tamaño; las otras condiciones tienen cinco. Su rendimiento concurrente excluye la preparación de canales, mientras el programa común incluye ese trabajo y la gestión de hilos: se documenta esta diferencia y no se interpreta como una comparación aislada del transporte. La serie gRPC con acuses del 21/11 verifica 42 relaciones y 84 eventos; las series históricas mantienen su alcance original.
+
+### Series preliminares conservadas
 
 Los resultados preliminares del 19 de noviembre están en analysis/resultados-2026-11-19/. Para regenerarlos en una carpeta nueva desde la raíz:
 

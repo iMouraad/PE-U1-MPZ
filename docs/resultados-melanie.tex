@@ -42,11 +42,11 @@ calentamiento y quedan 8\,000 mediciones válidas. Hay ocho condiciones
 y 40 corridas válidas en total. Las tablas siguientes se incorporan
 directamente desde la salida del analizador, sin transcribir sus cifras.
 Los archivos originales están en \texttt{data/melanie/2026-11-19/}
-y el análisis en \texttt{analysis/resultados-melanie-2026-11-19/}.
+y el análisis en \texttt{analysis/resultados-finales-2026-11-22/melanie/}.
 
 \subsection{Latencia y rendimiento}
-\input{../analysis/resultados-melanie-2026-11-19/tabla_latencias.tex}
-\input{../analysis/resultados-melanie-2026-11-19/tabla_rendimiento.tex}
+\input{../analysis/resultados-finales-2026-11-22/melanie/tabla_latencias.tex}
+\input{../analysis/resultados-finales-2026-11-22/melanie/tabla_rendimiento.tex}
 
 Las tablas usan el formato numérico de Python y la captura de terminal
 el de PowerShell. Algunas medianas terminadas en un punto medio
@@ -94,14 +94,14 @@ limitaciones, sin reemplazar los datos de esta sesión
 
 \begin{figure}[p]
 \centering
-\includegraphics[width=\linewidth,height=0.80\textheight,keepaspectratio]{../analysis/resultados-melanie-2026-11-19/cajas_latencias.pdf}
+\includegraphics[width=\linewidth,height=0.80\textheight,keepaspectratio]{../analysis/resultados-finales-2026-11-22/melanie/cajas_latencias.pdf}
 \caption{Distribución de las 8\,000 latencias válidas de Melanir,
 separadas por mecanismo, modo y tamaño serializado.}
 \label{fig:melanie-cajas}
 \end{figure}
 \begin{figure}[p]
 \centering
-\includegraphics[width=\linewidth,height=0.80\textheight,keepaspectratio]{../analysis/resultados-melanie-2026-11-19/barras_latencias.pdf}
+\includegraphics[width=\linewidth,height=0.80\textheight,keepaspectratio]{../analysis/resultados-finales-2026-11-22/melanie/barras_latencias.pdf}
 \caption{Media de las medias de cinco corridas por condición en Melanir.
 Las barras de error representan una desviación estándar muestral
 entre corridas; no son intervalos de confianza.}
@@ -114,9 +114,9 @@ Las pruebas de intercambio de mensajes se ejecutaron aparte de las
 corridas de latencia. Cada mecanismo produjo tres CSV, con 42 eventos
 y 21 mensajes emparejados. El verificador comprobó 21 de 21 relaciones
 envío--recepción y 42 de 42 actualizaciones locales en ambos casos.
-Las evidencias corresponden a los eventos de aplicación registrados;
-se mantiene la limitación de los acuses gRPC indicada en el
-apartado~\ref{sec:lamport}.
+Las evidencias corresponden a los eventos de aplicación de esta sesión
+del 19/11, anterior a la corrección de los acuses. La verificación
+posterior con acuses se presenta en el apartado~\ref{sec:lamport-ack}.
 
 \begin{table}[htbp]
 \centering\small

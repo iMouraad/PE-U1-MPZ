@@ -134,3 +134,12 @@
 - Documentación: completé mi fila en `docs/aportes.tex`, mi declaración en `docs/uso-ia.tex` y la aplicación al PFC (SGIRI) en `docs/discusion.tex`.
 - Problemas encontrados: en las primeras capturas no se veía el `whoami` porque la salida había subido; repetí el comando al final para que quedara visible.
 - Pendiente grupal: grabar y enlazar el video y actualizar el estado del README.
+
+## Domingo 22/11/2026 — Integración del informe por Melanie
+
+- Se integraron las sesiones de ambos mecanismos de Mourad, DESKTOP-5MJCPHU y Melanir, conservando cada máquina y fecha por separado. El conjunto final tiene 26 400 filas, 4 800 de calentamiento excluidas y 21 600 mediciones válidas en 112 corridas.
+- Con apoyo de Codex se preparó analysis/integrar_sesiones.py para reproducir las tablas, figuras, inventario y verificación de eventos usando los CSV conservados. Los cálculos de las 24 condiciones se contrastaron con NumPy y los 31 hashes de data/ permanecieron correctos.
+- Se incorporó la corrida gRPC de Steven con solicitudes y acuses: 42 relaciones causales y 84 actualizaciones correctas. Las sesiones anteriores mantienen su alcance original de 21 relaciones y 42 eventos.
+- Se actualizaron el protocolo, las explicaciones de implementación, los resultados, las amenazas a la validez, la discusión y las conclusiones. Se añadieron las capturas originales de Angel y la terminal de Steven, sin editar las imágenes ni los CSV.
+- Se documentaron las diferencias del gRPC concurrente de Steven: una corrida válida por tamaño y duración medida después de preparar los canales. No se presenta como un ensayo con condiciones idénticas ni se estima una barra de error entre corridas cuando n=1.
+- Estado: Melanie revisó y aprobó el PDF de 35 páginas y autorizó publicar esta integración, sus resultados, scripts y documentación en un único commit.

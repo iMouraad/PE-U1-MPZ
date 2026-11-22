@@ -84,10 +84,25 @@ Por eso no se puede concluir que una implementación sea más robusta
 a partir de sus tiempos normales.
 
 La verificación del reloj respalda las relaciones registradas, pero
-no mide el tiempo físico entre eventos. En gRPC, el acuse de la llamada
-no se registra como evento adicional ni actualiza el reloj del cliente
-al llegar. Revisar ese recorrido sigue siendo necesario para modelar
-el ciclo completo de solicitud y respuesta.
+no mide el tiempo físico entre eventos. Las sesiones iniciales de gRPC no cubrían el acuse. La versión
+actual registra su envío y recepción y actualiza el reloj del cliente;
+la corrida del 21/11 verifica ese ciclo completo con 42 relaciones
+y 84 eventos. Los registros previos conservan su alcance histórico.
+
+\subsection{Comparación entre los tres equipos}
+La dirección de la hipótesis para 100 bytes secuenciales coincide en
+las tres máquinas: sockets tiene menor mediana que gRPC. Mourad
+registró 0,0479 frente a 0,33505 ms y DESKTOP-5MJCPHU, 0,0231 frente
+a 0,27715 ms. Es una coincidencia descriptiva de las implementaciones,
+no una prueba de que la diferencia sea independiente del hardware.
+
+En Steven, sockets se midió dos días después de gRPC y tiene cinco
+corridas concurrentes frente a una por tamaño. Además, el cronómetro
+concurrente gRPC original comienza después de preparar los canales.
+Por eso no se compara su tasa como si ambos mecanismos tuvieran el
+mismo coste de arranque ni se atribuye la menor dispersión de una
+condición a un mecanismo sin repeticiones equivalentes. Las tablas
+mantienen la procedencia y el número de corridas a la vista.
 
 \subsection{Aplicación al PFC y límites de la decisión}
 El PFC del equipo de Angel es el SGIRI, un sistema de gestión de

@@ -1,77 +1,56 @@
 \section{Amenazas a la validez}
 \label{sec:validez}
+\subsection{Máquina, fechas y carga de fondo}
+Los tres equipos ejecutaron procesos en localhost: comparten CPU,
+memoria y loopback. Se registraron sistema, procesador, RAM y versiones,
+pero no una traza continua de CPU, temperatura o programas abiertos.
+Melanir y Mourad ejecutaron primero sockets y después gRPC; la serie
+TCP de Steven es del 21/11 y su gRPC del 19/11. No se alternaron ni
+aleatorizaron de manera controlada las condiciones. Estos factores
+pueden explicar parte de las diferencias y no quedan eliminados por
+tener varios miles de solicitudes.
 
-Los siguientes factores afectan el alcance de las mediciones de sockets y
-gRPC. Los controles propuestos para el grupo se mantienen como referencia.
-El apartado~\ref{sec:resultados-melanie} documenta cuáles se aplicaron
-en la sesión de Melanir: mismo equipo, una corrida de calentamiento y
-cinco válidas por condición, con duración total registrada. En esa sesión
-no se alternaron los mecanismos ni se registró de forma continua la carga
-de fondo; tampoco se igualaron los límites de serialización del RTT.
-
-\subsection{Condiciones de ejecución}
-Otros programas abiertos, el uso de CPU y memoria, el ahorro de energía
-y la planificación de los procesos pueden introducir variación en los
-tiempos. Se registrarán las condiciones de cada equipo y se procurará
-mantener una carga de fondo semejante al ejecutar ambos mecanismos.
-Alternar el orden de las corridas ayudaría a reducir el efecto de cambios
-de carga o temperatura a lo largo de la sesión.
-
-El arranque de los procesos, la creación de conexiones y la inicialización
-de las bibliotecas pueden afectar especialmente a las primeras
-solicitudes. El protocolo prevé una corrida de calentamiento descartada
-por condición. Falta confirmar que ambos clientes apliquen este criterio
-y que las conexiones se reutilicen de forma comparable.
-
-\subsection{Equivalencia de la comparación}
-Los estudios de RPC y serialización motivan comprobar cómo influyen el
-tamaño de los mensajes y las condiciones de carga
+\subsection{Qué se comparó}
+La solicitud serializada tiene 100 o 10\,000 bytes; el contenido útil
+no es idéntico en JSON y Protocol Buffers. El RTT de sockets excluye
+la construcción del JSON, mientras la llamada gRPC incluye su
+serialización interna. Son implementaciones completas con límites
+distintos, no una medición aislada de TCP frente a HTTP/2
 \cite{blinowski2026rpc,jackson2024streaming}.
-Enviar el mismo texto puede producir tamaños serializados diferentes
-en JSON y Protocol Buffers. Se registrará el contenido útil en bytes y
-se explicará qué parte del mensaje cuenta para el tamaño declarado.
-La interpretación de las diferencias deberá considerar conjuntamente
-el transporte, la biblioteca y la serialización usados.
 
-El RTT depende del punto donde empieza y termina el cronómetro.
-Se comprobará que ambos mecanismos incluyan las mismas etapas y que
-el acuse represente un trabajo equivalente en el receptor.
-También se registrarán las opciones de seguridad y compresión que
-utilice cada implementación. La escritura de CSV y los mensajes en
-pantalla pueden añadir trabajo durante la prueba; su ubicación respecto
-del intervalo medido deberá quedar documentada.
+En el programa común, el rendimiento incluye creación y cierre de
+clientes y conexiones y gestión de hilos. El gRPC concurrente original
+de Steven comienza después de preparar los canales. Sus tasas no
+representan exactamente el mismo intervalo. Las tablas explicitan
+el origen; las diferencias entre esas tasas no deben interpretarse
+como un efecto del transporte por sí solo.
 
-En concurrencia, diferencias en el inicio de los clientes, la cantidad
-de solicitudes o el trabajo del servidor pueden cambiar el rendimiento.
-Se acordarán la carga total y el inicio de la prueba, y se medirá una
-duración común hasta que termine el último cliente. Falta verificar
-estos puntos en las implementaciones finales.
+Las conexiones de gRPC se abren con \texttt{insecure\_channel}; las
+de sockets son TCP sin TLS. No se evaluaron cifrado, pérdida de paquetes,
+caídas de nodos ni reintentos bajo fallo. El funcionamiento normal y
+los plazos del código no prueban robustez ante fallos reales.
 
-\subsection{Repeticiones y tratamiento de los datos}
-Una corrida aislada puede quedar condicionada por un pico de carga.
-Se realizarán las cinco repeticiones previstas y se conservarán sus
-identificadores para observar la variación entre corridas.
-La media por sí sola puede ocultar respuestas lentas; por eso el análisis
-incluye mediana, desviación estándar, percentil 95 y diagrama de cajas.
-Con 100 mensajes por corrida, la estimación de la cola sigue siendo
-sensible a pocas observaciones.
+\subsection{Repeticiones y tratamiento de datos}
+Todas las series finales tienen calentamiento etiquetado y excluido.
+Se mantuvieron los identificadores de corrida y los originales, con
+hashes comprobados. Cada condición secuencial tiene cinco repeticiones;
+la concurrente también, salvo gRPC de Steven con una por tamaño.
+No se estima una desviación entre corridas cuando $n=1$ ni se trata
+cada solicitud como una repetición independiente del experimento.
 
-Los fallos y tiempos de espera pueden quedar fuera de los CSV de
-mensajes completados y hacer que el rendimiento aparente sea mayor.
-Se documentarán esos fallos y las corridas repetidas, conservando los
-archivos originales. El análisis mantendrá separados los equipos,
-tamaños y modos. Las barras de error expresan una desviación estándar
-entre medias de corridas y su interpretación depende de cuántas
-repeticiones válidas haya.
+La desviación y P95 por mensaje describen la distribución dentro de
+la muestra. Las barras de error describen una desviación entre medias
+de corridas, no intervalos de confianza. No se aplicaron contrastes
+de significación. Los mensajes fallidos pueden quedar fuera de los
+CSV de solicitudes completadas; los metadatos no proporcionan una
+medición exhaustiva de errores o pérdidas.
 
-\subsection{Alcance de los resultados}
-Ejecutar los tres nodos en localhost hace que compartan recursos y
-utilicen loopback. Las mediciones describirán ese entorno; su aplicación
-a equipos separados, redes con pérdida de paquetes o despliegues en
-la nube requerirá nuevas pruebas. Las diferencias entre las máquinas
-del grupo también se tendrán en cuenta al comparar sus resultados.
-
-La conclusión deberá indicar el tamaño, la carga y el entorno de cada
-comparación cuantificada. La verificación de Lamport aporta evidencia
-del orden de los eventos registrados; medir RTT y mensajes por segundo
-requiere las corridas de latencia previstas en el protocolo.
+\subsection{Alcance y trazabilidad}
+No se promedian equipos para producir una cifra única de ventaja.
+Las observaciones describen máquinas, fechas y programas concretos;
+una red física, la nube, TLS u otras cargas requieren nuevas pruebas.
+Los CSV históricos conservan su alcance original. El registro gRPC
+del 21/11 cubre también los acuses, a diferencia de las sesiones
+iniciales. Los hashes permiten detectar cambios en los archivos
+conservados; no sustituyen las evidencias de ejecución, la bitácora
+ni la demostración del equipo.

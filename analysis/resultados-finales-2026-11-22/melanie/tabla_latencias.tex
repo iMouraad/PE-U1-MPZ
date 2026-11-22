@@ -1,0 +1,21 @@
+\begin{table}[htbp]
+\centering
+\small
+\caption{Mediciones experimentales. Latencias en milisegundos; desviación estándar muestral por mensaje.}
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%
+\begin{tabular}{llllrrrr}
+\toprule
+Equipo & Modo & Bytes & Mecanismo & Media & Mediana & Desv. & P95 \\
+\midrule
+Melanir & concurrente & 100 & grpc & 1.3525 & 1.3217 & 0.2330 & 1.7758 \\
+Melanir & concurrente & 10000 & grpc & 1.8018 & 1.6902 & 0.4746 & 2.6507 \\
+Melanir & secuencial & 100 & grpc & 1.3079 & 1.2858 & 0.1890 & 1.6578 \\
+Melanir & secuencial & 10000 & grpc & 1.4494 & 1.4127 & 0.2900 & 1.8521 \\
+Melanir & concurrente & 100 & sockets & 0.1866 & 0.1621 & 0.1450 & 0.3109 \\
+Melanir & concurrente & 10000 & sockets & 0.3553 & 0.3244 & 0.1685 & 0.5938 \\
+Melanir & secuencial & 100 & sockets & 0.1136 & 0.0901 & 0.0928 & 0.1946 \\
+Melanir & secuencial & 10000 & sockets & 0.1644 & 0.1429 & 0.0729 & 0.2468 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}

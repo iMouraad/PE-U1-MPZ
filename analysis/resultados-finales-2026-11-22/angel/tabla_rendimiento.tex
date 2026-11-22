@@ -1,0 +1,21 @@
+\begin{table}[htbp]
+\centering
+\small
+\caption{Mediciones experimentales. Rendimiento agregado: mensajes completados / tiempo total de corridas.}
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%
+\begin{tabular}{llllrrrr}
+\toprule
+Equipo & Modo & Bytes & Mecanismo & Mensajes & Corridas & Tiempo (s) & Mensajes/s \\
+\midrule
+Mourad & concurrente & 100 & grpc & 1500 & 5 & 1.1022 & 1360.9402 \\
+Mourad & concurrente & 10000 & grpc & 1500 & 5 & 1.0934 & 1371.9131 \\
+Mourad & secuencial & 100 & grpc & 500 & 5 & 1.0710 & 466.8711 \\
+Mourad & secuencial & 10000 & grpc & 500 & 5 & 1.1055 & 452.2946 \\
+Mourad & concurrente & 100 & sockets & 1500 & 5 & 0.0588 & 25527.2657 \\
+Mourad & concurrente & 10000 & sockets & 1500 & 5 & 0.1068 & 14040.6711 \\
+Mourad & secuencial & 100 & sockets & 500 & 5 & 0.0341 & 14672.3517 \\
+Mourad & secuencial & 10000 & sockets & 500 & 5 & 0.0556 & 8993.9057 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}

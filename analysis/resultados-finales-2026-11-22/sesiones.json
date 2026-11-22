@@ -1,0 +1,20 @@
+{
+  "angel": [
+    "data/angel/2026-11-22/mediciones_sockets/latencias_sockets_secuencial.csv",
+    "data/angel/2026-11-22/mediciones_sockets/latencias_sockets_concurrente.csv",
+    "data/angel/2026-11-22/mediciones_grpc/latencias_grpc_secuencial.csv",
+    "data/angel/2026-11-22/mediciones_grpc/latencias_grpc_concurrente.csv"
+  ],
+  "steven": [
+    "data/steven/2026-11-21/mediciones_sockets/latencias_sockets_secuencial.csv",
+    "data/steven/2026-11-21/mediciones_sockets/latencias_sockets_concurrente.csv",
+    "data/latencias_grpc.csv",
+    "data/latencias_grpc_concurrente.csv"
+  ],
+  "melanie": [
+    "data/melanie/2026-11-19/mediciones_sockets/latencias_sockets_secuencial.csv",
+    "data/melanie/2026-11-19/mediciones_sockets/latencias_sockets_concurrente.csv",
+    "data/melanie/2026-11-19/mediciones_grpc/latencias_grpc_secuencial.csv",
+    "data/melanie/2026-11-19/mediciones_grpc/latencias_grpc_concurrente.csv"
+  ]
+}

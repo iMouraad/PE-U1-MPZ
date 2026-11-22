@@ -1,0 +1,11 @@
+serie,nodo,tipo_evento,reloj,hora_real,id_mensaje,contraparte
+TCP inicial,nodo-A,envio,2,2026-11-18 10:50:25.829969,cf648d87,nodo-C
+TCP inicial,nodo-B,recepcion,2,2026-11-18 10:50:25.474609,a5cbb3c7,nodo-A
+gRPC inicial,nodo-A,envio,1,2026-11-18 18:44:33.756780,58cbbdd0,nodo-B
+gRPC inicial,nodo-B,envio,1,2026-11-18 18:44:33.756780,60af6c99,nodo-A
+TCP Melanir,nodo-A,envio,1,2026-11-19 16:07:32.901137,42dd864c,nodo-C
+TCP Melanir,nodo-B,envio,1,2026-11-19 16:07:32.901142,fe53befd,nodo-C
+gRPC Melanir,nodo-A,envio,1,2026-11-19 16:16:51.131164,1c1cbfe3,nodo-B
+gRPC Melanir,nodo-B,envio,1,2026-11-19 16:16:51.131194,93224eb9,nodo-A
+gRPC con acuses,nodo-A,envio,1,2026-11-21 19:27:24.342719,6a8a831d,nodo-B
+gRPC con acuses,nodo-B,envio,1,2026-11-21 19:27:24.341710,fa8f7630,nodo-C

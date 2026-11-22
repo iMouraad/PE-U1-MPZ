@@ -1,0 +1,6 @@
+serie,fecha,relaciones,eventos,actualizaciones_correctas
+TCP inicial,18/11,21,42,42
+gRPC inicial,18/11,21,42,42
+TCP Melanir,19/11,21,42,42
+gRPC Melanir,19/11,21,42,42
+gRPC con acuses,21/11,42,84,84

@@ -146,7 +146,7 @@ def escribir_tabla(ruta, datos, columnas, titulo):
     lineas = [
         r"\begin{table}[htbp]", r"\centering", r"\small",
         r"\caption{" + texto_latex(titulo) + "}",
-        r"\resizebox{\linewidth}{!}{%",
+        r"\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%",
         r"\begin{tabular}{" + "l" * 4 + "r" * (len(columnas) - 4) + "}",
         r"\toprule",
         " & ".join(texto_latex(etiqueta) for etiqueta in columnas.values()) + r" \\",

@@ -78,7 +78,7 @@ físicas no establece por sí sola una relación causal
 \cite{vansteen2023distributed}.
 
 \subsection{Verificación de los registros de gRPC}
-El mismo verificador se ejecutó con los tres CSV
+La serie inicial gRPC del 18/11 utilizó los tres CSV
 \texttt{eventos\_grpc\_nodo-*.csv}. Se emparejaron los 21 mensajes
 registrados y se comprobaron sus 42 eventos. Los 21 pares cumplen
 reloj de recepción mayor que reloj de envío, y las 42 actualizaciones
@@ -89,10 +89,9 @@ En estos archivos, el primer envío de nodo-A
 tienen reloj 1. El verificador no encuentra un camino causal
 entre ellos usando el orden local y los mensajes registrados.
 El alcance de la comprobación son los mensajes de aplicación
-guardados en los CSV. Los acuses RPC se devuelven al cliente,
-pero el programa actual no los registra como eventos adicionales
-ni actualiza el reloj del emisor al recibirlos. Esa parte deberá
-revisarse para cubrir también los acuses en el modelo de eventos.
+guardados en los CSV. En esa versión, los acuses RPC se devolvían al cliente sin registrarse
+como eventos adicionales ni actualizar su reloj al recibirlos. Es un
+alcance histórico de esos CSV, corregido en la sesión posterior del 21/11.
 
 \begin{landscape}
 \subsection{Evidencia de ejecución}
@@ -105,3 +104,31 @@ el nombre de la máquina, la fecha, la hora del sistema y la salida completa.
 \label{fig:lamport-melanie}
 \end{center}
 \end{landscape}
+
+\subsection{gRPC con solicitudes y acuses, 21 de noviembre}
+\label{sec:lamport-ack}
+Los tres CSV de \texttt{data/steven/2026-11-21/eventos\_grpc\_ack/}
+registran 21 solicitudes y 21 acuses. El servidor crea un identificador
+terminado en \texttt{-ack}, incrementa el reloj al enviarlo y el cliente
+aplica la regla de recepción al recibir la respuesta. Se obtuvieron
+42 relaciones envío--recepción y 84 eventos. El verificador comprobó
+42/42 relaciones causales y 84/84 actualizaciones locales correctas.
+
+Los envíos \texttt{6a8a831d} de nodo-A y \texttt{fa8f7630} de nodo-B
+tienen reloj 1 y no presentan un camino causal en ninguna dirección
+en la corrida registrada. Se conservan las series iniciales sin acuses;
+no se convierten retrospectivamente sus 42 eventos en 84.
+
+\input{../analysis/resultados-finales-2026-11-22/tabla_lamport.tex}
+
+La tabla se genera al verificar cada sesión por separado. Para repetir
+la comprobación actualizada desde la raíz:
+\begin{quote}\small\ttfamily
+python analysis/verificar\_lamport.py\par
+"data/steven/2026-11-21/eventos\_grpc\_ack/eventos\_grpc\_*.csv"
+\end{quote}
+
+\begin{landscape}\begin{center}
+\includegraphics[width=\linewidth,height=0.85\textwidth,keepaspectratio]{../evidencias/steven/2026-11-21/terminal-lamport.png}
+\captionof{figure}{Steven, 21/11: ejecución real del verificador en PowerShell, con identificación y 42 relaciones y 84 eventos.}
+\end{center}\end{landscape}

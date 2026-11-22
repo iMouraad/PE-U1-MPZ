@@ -1,138 +1,100 @@
-% Sección para integrar desde docs/ con \input{protocolo.tex}.
-% Requiere amsmath, booktabs, tabularx, hyperref y biblatex con referencias.bib.
 \section{Protocolo experimental}
 \label{sec:protocolo}
+\subsection{Diseño ejecutado y selección de las series}
+Se compararon sockets TCP con JSON y gRPC con Protocol Buffers en
+procesos Python sobre localhost. Los nodos de eventos son A, B y C;
+las pruebas de RTT utilizan servidores de eco específicos y uno o tres
+clientes. TCP proporciona un flujo fiable y ordenado, mientras HTTP/2
+define los flujos y tramas del transporte utilizado por gRPC
+\cite{eddy2022tcp,thomson2022http2}. El formato de serialización forma
+parte de la implementación comparada \cite{jackson2024streaming}.
 
-\subsection{Diseño de la comparación}
-Se compararán sockets TCP con mensajes JSON y gRPC con Protocol Buffers
-en tres nodos: nodo-A, nodo-B y nodo-C. Cada integrante ejecutará las
-pruebas en su propio equipo. Los resultados se agruparán por máquina,
-mecanismo, tamaño de mensaje y modo de ejecución para conservar las
-condiciones de cada prueba.
+Se incluyeron las sesiones de Melanir del 19/11, Mourad del 22/11 y
+DESKTOP-5MJCPHU del 19 y 21/11. Cada equipo tiene datos de ambos
+mecanismos. Las primeras mediciones nativas de sockets del 19/11 se
+conservan en la raíz de \texttt{data/}, pero no se mezclan con las
+mediciones posteriores de Mourad: carecen de duración total y no son
+necesarias para el conjunto final. La selección exacta se guarda en
+\texttt{analysis/resultados-finales-2026-11-22/sesiones.json}.
 
-TCP ofrece un flujo de bytes fiable y ordenado \cite{eddy2022tcp}.
-La delimitación de los mensajes JSON corresponde a nuestra aplicación.
-Para describir la base de transporte de gRPC se usará la especificación
-HTTP/2, que define los flujos y las tramas de la conexión
-\cite{thomson2022http2}. La comparación empírica deberá considerar
-también el formato de serialización \cite{jackson2024streaming}.
-
-El protocolo está preparado para las siguientes corridas. Su ejecución
-y las cantidades obtenidas se confirmarán con los CSV originales.
-
-\begin{table}[htbp]
-\centering
-\caption{Condiciones previstas para ambos mecanismos en cada equipo.}
-\label{tab:condiciones-protocolo}
-\small
+\begin{table}[htbp]\centering\small
+\caption{Condiciones ejecutadas por tamaño y mecanismo.}
 \begin{tabularx}{\linewidth}{lXX}
 \toprule
-\textbf{Condición} & \textbf{Secuencial} & \textbf{Concurrente} \\
+Condición & Secuencial & Concurrente \\
 \midrule
-Clientes activos & Un cliente envía y espera cada respuesta & Tres clientes envían a la vez \\
-Tamaños previstos & Aproximadamente 100 bytes y 10 KB & Los mismos tamaños \\
-Calentamiento & Una corrida previa descartada por tamaño & Una corrida previa descartada por tamaño \\
-Repeticiones & Al menos 5 corridas de 100 envíos por tamaño & Al menos una prueba; cantidad final pendiente \\
-Control de comparación & Mismo contenido, equipo y límites de medición & Mismo contenido y carga total entre mecanismos \\
+Clientes & Uno, 100 solicitudes por corrida & Tres, 100 solicitudes cada uno \\
+Solicitud serializada & 100 y 10\,000 bytes & 100 y 10\,000 bytes \\
+Calentamiento & Una corrida etiquetada y excluida & Una corrida etiquetada y excluida \\
+Repeticiones válidas & Cinco en todos los equipos & Cinco, salvo gRPC de Steven: una por tamaño \\
 \bottomrule
-\end{tabularx}
-\end{table}
+\end{tabularx}\end{table}
 
-Se propone usar 100 y 10\,240 bytes de contenido útil, medidos después de
-codificar el texto en UTF-8. Falta confirmar estos tamaños con quienes
-implementan los clientes. También se documentará si se mide solo el
-contenido o el mensaje serializado completo, porque JSON y Protocol
-Buffers añaden campos y codificaciones diferentes.
+Los tamaños ejecutados son los de la solicitud serializada completa,
+no 10\,240 bytes de contenido útil. Los clientes ajustan el JSON con
+su delimitador y el mensaje protobuf mediante \texttt{ByteSize()}.
+Las conexiones se reutilizan durante los 100 envíos de cada cliente.
+Cada equipo se mantiene separado en tablas y figuras; no se calcula
+una media que combine máquinas distintas.
 
-\textbf{Estado de las corridas recibidas el 19 de noviembre.}
-Los programas publicados utilizan 100 y 10\,000 bytes de solicitud
-serializada. Los CSV contienen cinco repeticiones secuenciales y una
-concurrente por tamaño y mecanismo. El calentamiento secuencial de
-sockets se descarta dentro del cliente y su prueba concurrente no
-incluye calentamiento. gRPC conserva las filas de calentamiento de
-ambos modos con una etiqueta para excluirlas. Los resultados y las
-diferencias pendientes de controlar se detallan en el apartado de
-resultados del informe integrado.
-
-\subsection{Entorno que se registrará}
-\textbf{Actualización de la ejecución propia.}
-La sección de pruebas de ambos mecanismos en un mismo equipo recoge
-la sesión posterior de Melanir, con cinco corridas válidas en ambos modos y mecanismos.
-En ella se utilizaron los tamaños serializados de 100 y 10\,000 bytes
-de los clientes publicados; se registró una corrida de calentamiento
-por condición y la duración total mediante un programa común.
-Los criterios previstos que siguen se distinguen de esos valores ejecutados.
-
-El requisito del entorno es Python 3.11 o superior. Las dependencias
-declaradas en \texttt{requirements.txt} son grpcio 1.85.1,
-grpcio-tools 1.85.1, protobuf 7.36.2, pandas 3.1.1 y matplotlib 3.11.2.
-La instalación de estas versiones ya se comprobó en un entorno virtual
-con Python 3.14; la versión usada por cada integrante durante las
-mediciones se registrará por separado.
-
-\begin{table}[htbp]
-\centering
-\caption{Información pendiente de registrar para cada equipo de ejecución.}
-\small
-\begin{tabularx}{\linewidth}{lX}
+\subsection{Entornos registrados}
+\begin{table}[htbp]\centering\small
+\caption{Equipos utilizados para las mediciones finales.}
+\begin{tabularx}{\linewidth}{lXXX}
 \toprule
-\textbf{Dato} & \textbf{Qué se debe completar} \\
+Dato & Melanie & Angel & Steven \\
 \midrule
-Identificación & Integrante, usuario y nombre de la máquina \\
-Sistema y recursos & Sistema operativo y versión, procesador y memoria RAM \\
-Entorno Python & Versión exacta y dependencias instaladas durante la corrida \\
-Despliegue & Procesos en localhost o contenedores; puertos de ambos mecanismos \\
-Condiciones de ejecución & Fecha, hora, programas abiertos y orden de las pruebas \\
-Código ejecutado & Commit y comandos usados para reproducir las corridas \\
+Equipo & Melanir & Mourad & DESKTOP-5MJCPHU \\
+Sistema & Windows 11 Home, 26200 & Windows 11 Pro & Windows, 26300 \\
+Procesador & Ryzen 7 5700U & Core i7-10700 & Core i7-13620H \\
+RAM registrada & 15,35 GiB & 15,8 GiB & 15,73 GB \\
+Python & 3.14.4 & 3.14.2 & 3.12.10 \\
 \bottomrule
-\end{tabularx}
-\end{table}
+\end{tabularx}\end{table}
 
-\subsection{Medición y registro}
-Antes de medir, se comprobará que los tres nodos estén disponibles.
-Para cada condición se realizará el calentamiento y se conservará su
-registro con la etiqueta correspondiente, de modo que el análisis pueda
-excluirlo. Después se ejecutarán las repeticiones válidas.
+Los datos proceden de \texttt{data/entorno\_melanie.json},
+\texttt{data/entorno\_angel.json} y \texttt{data/readme.md}; se
+conservan las unidades de RAM declaradas por cada integrante.
+Las versiones fijadas son grpcio y grpcio-tools 1.85.1, protobuf
+7.36.2, pandas 3.1.1 y matplotlib 3.11.2. Los archivos
+\texttt{sesion.json} documentan las fechas y el cliente de medición
+utilizado. No se registró de forma continua el uso de CPU ni la
+carga de fondo; no se presume que esas condiciones fueran iguales.
 
-La latencia de ida y vuelta (RTT) se medirá en el cliente con
-\texttt{time.perf\_counter()}. Como criterio propuesto, el intervalo
-comenzará antes de preparar y enviar la solicitud y terminará al recibir
-y decodificar su respuesta. Ambos mecanismos deberán utilizar los mismos
-límites. Falta confirmar en el código si la conexión se reutiliza y si
-su establecimiento queda fuera del intervalo. Estas decisiones se
-registrarán antes de la corrida final.
+\subsection{Límites del cronometraje}
+La latencia individual usa un contador de alta resolución en el cliente.
+En sockets, el JSON se construye antes del cronómetro; en gRPC se
+prepara el objeto antes, pero la llamada incluye la serialización interna.
+Los tamaños y las cantidades coinciden, aunque las etapas medidas no
+son idénticas. No se atribuye toda diferencia al transporte.
 
-En la prueba concurrente se acordará un inicio común para los tres
-clientes. El tiempo total de la corrida se medirá una sola vez, desde
-el comienzo de la carga hasta que termine el último cliente. Falta
-confirmar cuántos mensajes envía cada cliente y cuántos completan la
-corrida.
+Melanie, Angel y la sesión TCP de Steven emplearon el programa común
+\texttt{analysis/medir\_equipo.py}. La duración de cada corrida incluye
+preparación y cierre de los clientes y conexiones y, en concurrencia,
+el grupo de hilos. Una barrera coordina el trabajo antes de preparar
+las conexiones. Los CSV gRPC de Steven del 19/11 proceden del cliente
+original: en concurrencia la barrera se libera después de preparar los
+canales, de modo que la duración excluye esa preparación. Sus tasas
+se muestran con esa salvedad, no como una comparación aislada y
+equivalente del transporte entre sockets y gRPC.
 
-El formato provisional que acepta \texttt{analysis/analizar.py} incluye
-equipo, corrida, modo, bytes del mensaje, identificador único, RTT en
-milisegundos, duración total de la corrida en segundos y etiqueta de
-calentamiento. La duración total se repite en las filas de una misma
-corrida. Cuando se reciban los CSV reales se comprobarán los nombres,
-las unidades y su correspondencia con estas variables.
+\subsection{Análisis y reproducción}
+Los CSV identifican equipo, corrida, modo, bytes serializados, mensaje,
+RTT, duración de corrida y calentamiento. La duración repetida en cada
+fila se cuenta una sola vez por corrida. Se conservaron los originales
+y se comprobó su integridad con \texttt{data/SHA256SUMS}.
 
-Los fallos y tiempos de espera se documentarán en la bitácora. Una
-corrida incompleta se conservará identificada y se repetirá según el plan
-del grupo. Los CSV originales se guardarán en \texttt{data/} y se
-generará \texttt{SHA256SUMS} para comprobar su integridad.
-
-\subsection{Tratamiento de los resultados}
-El script calculará la media, mediana, desviación estándar muestral y
-percentil 95 de las latencias válidas de cada condición. El rendimiento
-agregado se obtendrá mediante
-\[
- R = \frac{\text{total de mensajes completados}}
-          {\text{suma de las duraciones de las corridas válidas}}.
-\]
-En concurrencia, cada duración se cuenta una sola vez por corrida.
-
-Las tablas de latencia y rendimiento se exportarán a CSV y LaTeX.
-El diagrama de cajas mostrará la distribución de las latencias por
-mensaje. El gráfico de barras mostrará la media de las medias por corrida
-y barras de error de una desviación estándar muestral entre corridas.
-Si solo hay una corrida, el gráfico indicará esa cantidad y omitirá
-la barra de error. Los tamaños, modos y equipos se mantendrán identificados.
+El programa \texttt{analysis/integrar\_sesiones.py} verifica los hashes,
+selecciona las series y reutiliza el analizador existente. Desde la raíz:
+\begin{quote}\small\ttfamily
+python analysis/integrar\_sesiones.py --salida\par
+analysis/resultados-finales-revision
+\end{quote}
+La carpeta de salida debe ser nueva. Se calculan media, mediana,
+desviación estándar muestral por mensaje y P95 mediante interpolación
+lineal. El rendimiento es mensajes completados divididos entre la suma
+de duraciones válidas. El gráfico de barras utiliza la media de las
+medias de corrida y una desviación estándar entre esas medias.
+Con una sola corrida concurrente gRPC de Steven, no se puede estimar
+esa variabilidad y no se dibuja barra de error. Los intervalos de las
+otras condiciones tampoco son intervalos de confianza.

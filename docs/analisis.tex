@@ -5,8 +5,8 @@
 El archivo \texttt{analysis/analizar.py} transforma los CSV de latencia
 en resúmenes, tablas y figuras. Recibe los archivos de cada mecanismo
 por separado mediante \texttt{--sockets} y \texttt{--grpc}. Cada fila
-representa un mensaje completado. El formato de entrada sigue pendiente
-de contrastarse con los CSV reales de las implementaciones.
+representa un mensaje completado. El lector se contrastó con el formato completo de las sesiones y con
+el formato nativo de seis columnas de los primeros CSV de sockets.
 
 \subsection{Lectura y validación de los registros}
 La función \texttt{leer\_csv} utiliza pandas para leer los campos

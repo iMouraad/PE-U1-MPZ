@@ -36,9 +36,10 @@ Cada proceso guarda el nodo, tipo de evento, reloj, hora real,
 identificador y contraparte en su propio CSV.
 
 Este programa registra envíos y recepciones para comprobar el orden
-causal. Para la futura medición RTT se deberá incorporar o confirmar
-un intercambio con respuesta, de modo que el cliente pueda medir
-el ciclo completo de solicitud y acuse.
+causal. La medición RTT se realizó con los servidores de eco de
+\texttt{src/sockets/latencia.py} y \texttt{src/grpc/latencia.py},
+que devuelven la solicitud para medir el ciclo completo. No se
+confunden esos RTT con la corrida de eventos de Lamport.
 
 \subsection{Contrato de gRPC y Protocol Buffers}
 El contrato se define en \texttt{proto/communication.proto} y los
@@ -73,3 +74,18 @@ contador lógico. Las pruebas de latencia tienen servidores de eco
 específicos: sockets escucha en el puerto 5000 y gRPC en el 50054.
 Estos servidores permiten medir la solicitud y su respuesta.
 \endgroup
+
+\subsection{Fragmentos del registro y del acuse}
+El nodo TCP actualiza el reloj al recibir el JSON dentro del candado.
+El fragmento siguiente se lee del código publicado:
+\lstinputlisting[firstline=40,lastline=45]{../src/sockets/nodo.py}
+
+En la versión gRPC actual, la solicitud y su acuse tienen
+identificadores separados. Después de registrar la recepción,
+el servidor incrementa el reloj para enviar el acuse:
+\lstinputlisting[firstline=70,lastline=76]{../src/grpc/nodo.py}
+
+El cliente comprueba el acuse y actualiza su reloj con el valor
+devuelto antes de registrar la recepción. Así se cubren los cuatro
+eventos de cada solicitud y respuesta:
+\lstinputlisting[firstline=108,lastline=109]{../src/grpc/nodo.py}

@@ -1,58 +1,61 @@
-\section{Resultados preliminares de las mediciones recibidas}
+\section{Resultados finales por equipo}
 \label{sec:resultados}
+\subsection{Inventario y procedencia}
+Se integraron 26\,400 filas de latencia: se excluyeron 4\,800 de
+calentamiento y quedaron 21\,600 mediciones válidas en 24 condiciones
+y 112 corridas válidas. Cada solicitud de RTT produce una fila; los
+registros de Lamport son experimentos separados y no se suman a esos RTT.
 
-Se procesaron los cuatro CSV de latencia publicados el 19 de noviembre
-de 2026. Contienen 4\,000 filas: 1\,600 de sockets y 2\,400 de gRPC.
-De gRPC se excluyeron 800 filas marcadas como calentamiento.
-El análisis utiliza 3\,200 mensajes válidos, agrupados por mecanismo,
-equipo, modo y tamaño. Las tablas se leen directamente de las salidas
-de \texttt{analysis/analizar.py}.
+\input{../analysis/resultados-finales-2026-11-22/tabla_inventario.tex}
 
-Los registros de sockets tienen un formato de seis columnas. El lector
-los adapta en memoria y utiliza el nodo y el número de envío para
-identificar cada mensaje dentro de su corrida. El modo se indica por
-argumento. El equipo aparece como \texttt{sin-registrar} porque ese dato
-falta en los CSV y en la descripción del entorno de sockets.
+Las tablas y figuras se generan con el script de integración y el
+analizador; no se transcriben valores a mano. Las subcarpetas
+\texttt{angel}, \texttt{steven} y \texttt{melanie} bajo
+\texttt{analysis/resultados-finales-2026-11-22/} conservan resultados
+por equipo. El apartado~\ref{sec:resultados-melanie} presenta los
+resultados y las capturas de Melanir. Las series iniciales del 19/11
+se conservan para trazabilidad, sin duplicarlas en el conjunto final.
 
-\input{../analysis/resultados-2026-11-19/tabla_latencias.tex}
-\input{../analysis/resultados-2026-11-19/tabla_rendimiento.tex}
+\subsection{Angel: Mourad, 22 de noviembre}
+La sesión está en \path{data/angel/2026-11-22/}. Se analizaron los cuatro
+CSV de sus subcarpetas de mediciones TCP y gRPC.
+Cada condición tiene cinco corridas válidas.
+En secuencial y 100 bytes, la mediana fue 0,0479 ms con sockets y
+0,33505 ms con gRPC. En concurrencia y 10\,000 bytes, las medias
+fueron 0,1639 y 0,6005 ms, respectivamente.
 
-Ambos mecanismos tienen cinco corridas secuenciales de 100 envíos por
-tamaño y una corrida concurrente de 300 mensajes por tamaño.
-Los registros gRPC identifican el equipo \texttt{DESKTOP-5MJCPHU}.
-Falta documentar el equipo de sockets y ejecutar ambos mecanismos
-bajo condiciones equivalentes en cada máquina. Estas observaciones
-permiten describir las sesiones recibidas; una conclusión sobre la
-hipótesis requiere controlar esas diferencias de entorno.
+\input{../analysis/resultados-finales-2026-11-22/angel/tabla_latencias.tex}
+\input{../analysis/resultados-finales-2026-11-22/angel/tabla_rendimiento.tex}
+\clearpage
+\begin{figure}[p]\centering
+\includegraphics[width=\linewidth,height=0.41\textheight,keepaspectratio]{../analysis/resultados-finales-2026-11-22/angel/cajas_latencias.pdf}
+\caption{Mourad: distribución de latencias válidas por mensaje.}
+\includegraphics[width=\linewidth,height=0.41\textheight,keepaspectratio]{../analysis/resultados-finales-2026-11-22/angel/barras_latencias.pdf}
+\caption{Mourad: medias de cinco corridas y una desviación estándar entre medias.}
+\end{figure}\clearpage
 
-\subsection{Duración y límites de medición}
-Los CSV de sockets carecen de duración total de corrida. Por ello,
-su tiempo total y rendimiento quedan como N/D en las salidas.
-Las tasas de gRPC se calculan a partir de la duración registrada por
-su programa, cuyo intervalo incluye la preparación o espera de los
-canales además de los envíos. El alcance de ese intervalo deberá
-mantenerse equivalente cuando se mida sockets.
+\subsection{Steven: DESKTOP-5MJCPHU, 19 y 21 de noviembre}
+Se combinaron los CSV TCP del 21/11 en la carpeta de Steven con los
+CSV gRPC originales del 19/11 en la raíz de \texttt{data/}.
+Esta selección reúne ambos mecanismos en la misma máquina, pero en
+días distintos. Hay cinco corridas válidas secuenciales en ambos;
+en concurrencia hay cinco de sockets y una de gRPC por tamaño.
+La mediana secuencial de 100 bytes fue 0,0231 ms con sockets y
+0,27715 ms con gRPC. Las cifras son descriptivas; los límites de la
+duración concurrente difieren según el apartado~\ref{sec:protocolo}.
 
-Los tamaños declarados en ambos programas son 100 y 10\,000 bytes
-de solicitud serializada. En sockets se ajusta el JSON con el salto de
-línea; en gRPC se usa \texttt{ByteSize()} de Protocol Buffers.
-La serialización JSON se realiza antes del cronómetro, mientras que
-la llamada gRPC medida incorpora su serialización interna. Esta
-diferencia debe considerarse al interpretar las latencias.
+\input{../analysis/resultados-finales-2026-11-22/steven/tabla_latencias.tex}
+\input{../analysis/resultados-finales-2026-11-22/steven/tabla_rendimiento.tex}
 
-\begin{figure}[p]
-\centering
-\includegraphics[width=\linewidth,height=0.83\textheight,keepaspectratio]{../analysis/resultados-2026-11-19/cajas_latencias.pdf}
-\caption{Distribución de latencias de los registros reales recibidos.
-Las condiciones se separan por equipo, modo y tamaño.}
-\label{fig:latencias-reales-cajas}
-\end{figure}
-\begin{figure}[p]
-\centering
-\includegraphics[width=\linewidth,height=0.83\textheight,keepaspectratio]{../analysis/resultados-2026-11-19/barras_latencias.pdf}
-\caption{Medias por corrida de los registros reales recibidos.
-El intervalo representa una desviación estándar entre medias.
-Cada barra indica el número de repeticiones disponibles; con una
-sola corrida concurrente se omite el intervalo.}
-\label{fig:latencias-reales-barras}
-\end{figure}
+La ausencia de barra de error en gRPC concurrente significa que hay
+una sola corrida válida, no que la variabilidad sea cero. Los
+percentiles y la desviación por mensaje sí se obtienen de las 300
+observaciones de esa corrida. El rendimiento reporta el intervalo
+de cada implementación; no permite aislar un efecto causal del mecanismo.
+\clearpage
+\begin{figure}[p]\centering
+\includegraphics[width=\linewidth,height=0.41\textheight,keepaspectratio]{../analysis/resultados-finales-2026-11-22/steven/cajas_latencias.pdf}
+\caption{DESKTOP-5MJCPHU: latencias por mensaje, manteniendo modo y tamaño.}
+\includegraphics[width=\linewidth,height=0.41\textheight,keepaspectratio]{../analysis/resultados-finales-2026-11-22/steven/barras_latencias.pdf}
+\caption{DESKTOP-5MJCPHU: medias por corrida; gRPC concurrente tiene $n=1$ por tamaño y carece de intervalo estimable.}
+\end{figure}\clearpage
