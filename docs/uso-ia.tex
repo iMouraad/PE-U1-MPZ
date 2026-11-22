@@ -25,4 +25,21 @@ identificadores y los hashes de integridad. Steven Pozo asume la
 responsabilidad por el código, los datos y las explicaciones
 correspondientes a su aporte.
 
-\textbf{Pendiente.} Angel Zambrano debe añadir su declaración de uso de IA.
+\textbf{Declaración de uso de IA (Angel Zambrano).}
+Se utilizó Claude de Anthropic como apoyo para generar y depurar el
+servidor, el cliente y los nodos TCP con reloj de Lamport y el programa
+de medición de latencia de sockets; para guiar la ejecución de las
+pruebas en Windows y resolver los errores encontrados, como el cierre
+anticipado del nodo-A que producía \texttt{ConnectionRefusedError}; y
+para preparar borradores de la bitácora, el README, la descripción de
+la fila de aportes y el texto de la aplicación al PFC. También se usó
+para revisar los CSV de la sesión del 22 de noviembre y calcular sus
+hashes.
+
+\textbf{Validación.} Los programas se ejecutaron en el equipo Mourad y
+los CSV se generaron sin edición manual. Se comprobó que cada recepción
+tuviera un reloj mayor que el envío correspondiente, que las corridas
+tuvieran 100 envíos y su calentamiento identificado, y que los hashes
+publicados coincidieran con los archivos. Angel Zambrano asume la
+responsabilidad por el código, los datos y las explicaciones
+correspondientes a su aporte.
