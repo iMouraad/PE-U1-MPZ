@@ -14,7 +14,6 @@ from datetime import datetime
 import hashlib
 import importlib.util
 import json
-import os
 from pathlib import Path
 import platform
 import socket
@@ -138,14 +137,12 @@ def main():
                         escritor.writerows(filas)
             finally:
                 if servidor.poll() is None:
-                    if os.name == "nt":
-                        subprocess.run(
-                            ["taskkill", "/PID", str(servidor.pid), "/T", "/F"],
-                            check=True, stdout=subprocess.DEVNULL,
-                        )
-                    else:
-                        servidor.terminate()
-                    servidor.wait(timeout=10)
+                    servidor.terminate()
+                    try:
+                        servidor.wait(timeout=10)
+                    except subprocess.TimeoutExpired:
+                        servidor.kill()
+                        servidor.wait(timeout=10)
         metadata = {
             "mecanismo": args.mecanismo, "equipo": platform.node(),
             "python": platform.python_version(), "inicio": inicio,

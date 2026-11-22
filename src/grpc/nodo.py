@@ -31,12 +31,12 @@ CARPETA_DATA = Path(__file__).resolve().parents[2] / "data"
 
 
 class NodoGrpc(communication_pb2_grpc.CommunicationServiceServicer):
-    def __init__(self, nombre):
+    def __init__(self, nombre, carpeta_data=CARPETA_DATA):
         self.nombre = nombre
         self.reloj = 0
         self.candado = threading.Lock()
-        CARPETA_DATA.mkdir(exist_ok=True)
-        ruta = CARPETA_DATA / f"eventos_grpc_{nombre}.csv"
+        carpeta_data.mkdir(parents=True, exist_ok=True)
+        ruta = carpeta_data / f"eventos_grpc_{nombre}.csv"
         self.archivo = ruta.open("w", newline="", encoding="utf-8")
         self.escritor = csv.writer(self.archivo)
         self.escritor.writerow(
@@ -67,9 +67,12 @@ class NodoGrpc(communication_pb2_grpc.CommunicationServiceServicer):
         if request.sender not in NODOS or "|" not in request.message:
             context.abort(grpc.StatusCode.INVALID_ARGUMENT, "Mensaje o emisor no válido")
         identificador = request.message.split("|", 1)[0]
+        identificador_ack = f"{identificador}-ack"
         with self.candado:
             self.reloj = max(self.reloj, request.lamport_clock) + 1
             self.registrar("recepcion", identificador, request.sender)
+            self.reloj += 1
+            self.registrar("envio", identificador_ack, request.sender)
             reloj_respuesta = self.reloj
         return communication_pb2.MessageResponse(
             sender=self.nombre,
@@ -96,8 +99,14 @@ class NodoGrpc(communication_pb2_grpc.CommunicationServiceServicer):
             )
             stub = communication_pb2_grpc.CommunicationServiceStub(canal)
             respuesta = stub.ExchangeMessage(solicitud, timeout=5)
-            if respuesta.message != f"ack|{identificador}":
+            if (
+                respuesta.sender != destino
+                or respuesta.message != f"ack|{identificador}"
+            ):
                 raise RuntimeError(f"Respuesta inesperada de {destino}")
+            with self.candado:
+                self.reloj = max(self.reloj, respuesta.lamport_clock) + 1
+                self.registrar("recepcion", f"{identificador}-ack", destino)
 
     def cerrar(self):
         self.archivo.close()
@@ -110,6 +119,12 @@ def argumentos():
     parser.add_argument("--espera-inicio", type=float, default=5)
     parser.add_argument("--espera-final", type=float, default=10)
     parser.add_argument("--semilla", type=int)
+    parser.add_argument(
+        "--salida",
+        type=Path,
+        default=CARPETA_DATA,
+        help="Carpeta de los CSV de eventos",
+    )
     args = parser.parse_args()
     if args.envios <= 0 or args.espera_inicio < 0 or args.espera_final < 0:
         parser.error("Los envíos deben ser positivos y las esperas no pueden ser negativas")
@@ -119,7 +134,7 @@ def argumentos():
 def main():
     args = argumentos()
     aleatorio = random.Random(args.semilla)
-    nodo = NodoGrpc(args.nombre)
+    nodo = NodoGrpc(args.nombre, args.salida)
     servidor = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     communication_pb2_grpc.add_CommunicationServiceServicer_to_server(nodo, servidor)
     puerto = servidor.add_insecure_port(f"127.0.0.1:{NODOS[args.nombre]}")

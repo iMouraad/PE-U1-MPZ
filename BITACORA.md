@@ -115,3 +115,12 @@
 - Integridad: comprobamos que los cinco CSV de eventos y latencia de Steven almacenados en Git coinciden con sus entradas en data/SHA256SUMS. En Windows, la copia de trabajo puede representar finales de línea distintos; la comprobación se hizo sobre los bytes publicados en los objetos de Git, que son los registrados por el equipo.
 - Documentación: completamos la fila de Steven en docs/aportes.tex con sus commits de los días 17, 18 y 19, y añadimos en docs/uso-ia.tex una declaración del alcance de Codex, las verificaciones realizadas y la responsabilidad del estudiante.
 - Pendiente: tomar la captura propia con usuario, equipo, fecha y hora visibles; preparar el video grupal y revisar la explicación del código para la demostración.
+
+## Sábado 21/11/2026 — Sesión de Steven
+
+- Integrante: Steven Pozo.
+- Pruebas de sockets: ejecuté en `DESKTOP-5MJCPHU`, con Python 3.12.10, una corrida de calentamiento y cinco corridas válidas de 100 envíos para 100 y 10 000 bytes, tanto en modo secuencial como con tres clientes concurrentes. Los CSV originales, la duración total, el entorno y los comandos quedaron en `data/steven/2026-11-21/mediciones_sockets/`.
+- Acuses gRPC: actualicé el nodo para registrar el envío y la recepción de cada acuse y para aplicar en el cliente la regla `max(reloj_local, reloj_recibido) + 1`. Conservé una nueva sesión de tres nodos con 21 solicitudes y 21 acuses.
+- Verificación: el script comprobó 84 eventos, 42/42 relaciones con envío anterior a recepción y 84/84 reglas locales de Lamport correctas. Los cinco CSV nuevos se incorporaron al registro SHA-256 sin edición manual.
+- Evidencia: tomé una captura directa de PowerShell con usuario, equipo, fecha, versión de Python, comando ejecutado y resultados de la verificación visibles.
+- Pendiente grupal: concretar el uso de sockets y gRPC en el PFC, grabar y enlazar el video de 3 a 5 minutos y preparar la demostración.

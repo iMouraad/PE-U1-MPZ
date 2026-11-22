@@ -1,0 +1,13 @@
+{
+  "mecanismo": "sockets",
+  "equipo": "DESKTOP-5MJCPHU",
+  "python": "3.12.10",
+  "inicio": "2026-11-21T19:26:32.976799-05:00",
+  "fin": "2026-11-21T19:26:34.097163-05:00",
+  "repeticiones_validas": 5,
+  "calentamiento_por_condicion": 1,
+  "fuente": "src\\sockets\\latencia.py",
+  "sha256_fuente": "7550e61f8bd88edea99be306033c20de00a8d9480bde2daa09977e61607aceab",
+  "duracion_corrida": "Desde antes de crear los clientes hasta finalizar sus conexiones; incluye el grupo de hilos en concurrencia",
+  "latencia_individual": "Según los límites del cliente original; JSON se prepara antes del cronómetro y gRPC serializa durante la llamada"
+}

@@ -30,7 +30,7 @@ El reparto de tareas está en `PLAN_DE_TRABAJO.md`.
 
 En revisión. Esta actualización incorpora las pruebas propias de Melanie del 19 de noviembre de 2026, su análisis y la integración al informe. Se conservan separados los resultados preliminares recibidos de los otros equipos de ejecución.
 
-El PDF de una página del SGA ya fue entregado, según confirmación de Melanie. El informe incluye las filas de aportes y las declaraciones de uso de Codex de Melanie y Steven. Siguen pendientes la fila y la declaración de Angel, la revisión de los aportes del grupo, la aplicación al escenario concreto del PFC y el video grupal con su enlace. La revisión de Lamport de gRPC sigue limitada a los eventos de aplicación registrados, sin cubrir el acuse RPC.
+El PDF de una página del SGA ya fue entregado, según confirmación de Melanie. El informe incluye las filas de aportes y las declaraciones de uso de Codex de Melanie y Steven. Siguen pendientes la fila y la declaración de Angel, la revisión de los aportes del grupo, la aplicación al escenario concreto del PFC y el video grupal con su enlace. Los datos de Melanie del 19 de noviembre conservan el alcance original sin acuses; la sesión posterior de Steven del 21 de noviembre registra y verifica también cada acuse RPC.
 
 ## Informe del grupo
 
@@ -98,6 +98,26 @@ Los cuatro CSV ya identifican su modo, equipo y duración. Se excluye el calenta
 En cada mecanismo se emparejaron 21 mensajes, con 21/21 relaciones envío–recepción y 42/42 actualizaciones locales correctas. El alcance es el de los CSV registrados: la implementación gRPC aún no registra el acuse como evento adicional ni actualiza el reloj del cliente al recibirlo.
 
 Las capturas 01 y 02 son de apoyo porque su encuadre no muestra toda la identificación. Las capturas 03–06 incluyen usuario, máquina, fecha y hora. Se mantienen los archivos originales sin editar.
+
+## Pruebas propias de Steven — 21 de noviembre de 2026
+
+Steven ejecutó en `DESKTOP-5MJCPHU`, con Python 3.12.10, las mediciones de sockets y una nueva sesión de eventos gRPC. El entorno, las horas, los parámetros y el hash del código de medición constan en `data/steven/2026-11-21/mediciones_sockets/sesion.json`.
+
+| Ruta | Contenido |
+|---|---|
+| `data/steven/2026-11-21/mediciones_sockets/` | CSV originales secuencial y concurrente, metadatos y log del servidor |
+| `data/steven/2026-11-21/eventos_grpc_ack/` | Tres CSV de eventos gRPC con solicitudes y acuses registrados |
+| `evidencias/steven/2026-11-21/terminal-lamport.png` | Captura directa de PowerShell con identificación y verificación |
+
+Sockets contiene 1 200 filas secuenciales (1 000 válidas y 200 de calentamiento) y 3 600 concurrentes (3 000 válidas y 600 de calentamiento). Para cada tamaño serializado, 100 y 10 000 bytes, se ejecutó una corrida de calentamiento descartada y cinco corridas válidas de 100 envíos; en modo concurrente participaron tres clientes con 100 envíos cada uno por corrida.
+
+La implementación gRPC registra el envío y la recepción del acuse con un identificador terminado en `-ack`; el cliente aplica `max(reloj_local, reloj_recibido) + 1`. En la sesión conservada, tres nodos realizaron siete solicitudes cada uno. El verificador comprobó 84 eventos, 42 relaciones causales —21 solicitudes y 21 acuses—, 42/42 casos de envío anterior a recepción y 84/84 reglas locales de Lamport.
+
+Para repetir la verificación desde la raíz:
+
+```text
+python analysis/verificar_lamport.py "data/steven/2026-11-21/eventos_grpc_ack/eventos_grpc_*.csv"
+```
 
 ## Integridad de los CSV
 
