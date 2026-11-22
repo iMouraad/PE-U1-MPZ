@@ -30,7 +30,7 @@ El reparto de tareas está en `PLAN_DE_TRABAJO.md`.
 
 En revisión. Esta actualización incorpora las pruebas propias de Melanie del 19 de noviembre de 2026, su análisis y la integración al informe. Se conservan separados los resultados preliminares recibidos de los otros equipos de ejecución.
 
-El PDF de una página del SGA ya fue entregado, según confirmación de Melanie. El informe incluye las filas de aportes y las declaraciones de uso de Codex de Melanie y Steven. Siguen pendientes la fila y la declaración de Angel, la revisión de los aportes del grupo, la aplicación al escenario concreto del PFC y el video grupal con su enlace. Los datos de Melanie del 19 de noviembre conservan el alcance original sin acuses; la sesión posterior de Steven del 21 de noviembre registra y verifica también cada acuse RPC.
+El PDF de una página del SGA ya fue entregado, según confirmación de Melanie. El informe incluye las filas de aportes y las declaraciones de uso de IA de los tres integrantes, la aplicación de cada mecanismo al PFC (SGIRI) y las pruebas propias de Melanie (19/11), Steven (21/11) y Angel (22/11). Los datos de Melanie del 19 de noviembre conservan el alcance original sin acuses; la sesión posterior de Steven del 21 de noviembre registra y verifica también cada acuse RPC. Video del grupo: (enlace pendiente).
 
 ## Informe del grupo
 
