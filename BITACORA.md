@@ -124,3 +124,13 @@
 - Verificación: el script comprobó 84 eventos, 42/42 relaciones con envío anterior a recepción y 84/84 reglas locales de Lamport correctas. Los cinco CSV nuevos se incorporaron al registro SHA-256 sin edición manual.
 - Evidencia: tomé una captura directa de PowerShell con usuario, equipo, fecha, versión de Python, comando ejecutado y resultados de la verificación visibles.
 - Pendiente grupal: concretar el uso de sockets y gRPC en el PFC, grabar y enlazar el video de 3 a 5 minutos y preparar la demostración.
+
+## Domingo 22/11/2026 — Sesión de Angel
+
+- Integrante: Angel Zambrano.
+- Pruebas propias: ejecuté `analysis/medir_equipo.py` para sockets y gRPC en el equipo `Mourad` (Windows 11 Pro, i7-10700, 15,8 GiB de RAM, Python 3.14.2). En cada tamaño y modo hubo una corrida de calentamiento y cinco válidas. Los CSV, los `sesion.json` y los registros del servidor quedaron en `data/angel/2026-11-22/`, y el entorno en `data/entorno_angel.json`.
+- Resultados: la mediana de sockets estuvo entre 0,048 y 0,154 ms y la de gRPC entre 0,335 y 0,576 ms. En secuencial con 100 B, sockets dio 0,048 ms, casi igual que en mi corrida del 19 (0,047 ms).
+- Integridad y evidencia: agregué los hashes de mis cuatro CSV a `data/SHA256SUMS` y las capturas 00 a 03 en `evidencias/`, con usuario, equipo, fecha y hora.
+- Documentación: completé mi fila en `docs/aportes.tex`, mi declaración en `docs/uso-ia.tex` y la aplicación al PFC (SGIRI) en `docs/discusion.tex`.
+- Problemas encontrados: en las primeras capturas no se veía el `whoami` porque la salida había subido; repetí el comando al final para que quedara visible.
+- Pendiente grupal: grabar y enlazar el video y actualizar el estado del README.
