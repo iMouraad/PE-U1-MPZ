@@ -23,7 +23,7 @@
 \usepackage{csquotes}
 \usepackage[backend=biber,style=ieee]{biblatex}
 \addbibresource{referencias.bib}
-\DefineBibliographyStrings{spanish}{artno={art.}}
+\DeclareFieldFormat[article]{eid}{Art.\addspace no.\addnbspace#1}
 \usepackage[hidelinks]{hyperref}
 \hypersetup{pdftitle={GA-SUM-02 — PE-U1 — Práctica Experimental Unidad 1: Comunicación entre Procesos Distribuidos con gRPC y Sockets TCP},pdfauthor={Equipo MPZ}}
 \setlength{\parindent}{0pt}

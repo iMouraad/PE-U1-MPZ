@@ -28,7 +28,7 @@ El reparto de tareas está en `PLAN_DE_TRABAJO.md`.
 
 ## Estado
 
-En revisión. Esta actualización incorpora las pruebas propias de Melanie del 19 de noviembre de 2026, su análisis y la integración al informe. Se conservan separados los resultados preliminares recibidos de los otros equipos de ejecución.
+Informe integrado para revisión final del equipo. Incluye los resultados finales de las pruebas de Melanie, Angel y Steven, con tablas y gráficos separados por máquina, verificación de Lamport, capturas, discusión y conclusiones. Las series preliminares se conservan como antecedentes, separadas de los resultados finales. El enlace al video de sustentación sigue pendiente.
 
 El PDF de una página del SGA ya fue entregado, según confirmación de Melanie. El informe incluye las filas de aportes y las declaraciones de uso de IA de los tres integrantes, la aplicación de cada mecanismo al PFC (SGIRI) y las pruebas propias de Melanie (19/11), Steven (21/11) y Angel (22/11). Los datos de Melanie del 19 de noviembre conservan el alcance original sin acuses; la sesión posterior de Steven del 21 de noviembre registra y verifica también cada acuse RPC.
 
