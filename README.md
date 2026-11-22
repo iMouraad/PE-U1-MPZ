@@ -40,6 +40,50 @@ El PDF de una página del SGA ya fue entregado, según confirmación de Melanie.
 
 El documento integrado está en [docs/informe.pdf](docs/informe.pdf). Su archivo principal es [docs/informe.tex](docs/informe.tex), que incorpora la carátula, hipótesis, arquitectura, implementación del análisis, protocolo, verificación de Lamport de ambos mecanismos, resultados finales por equipo, las pruebas propias de Melanie, las nuevas capturas de Angel y Steven, amenazas a la validez, discusión y conclusiones. Se distinguen las series históricas sin acuses de la sesión gRPC actualizada y se documentan las diferencias del protocolo realmente ejecutado.
 
+## Iniciar los tres nodos
+
+En PowerShell, desde la raíz del repositorio, preparar el entorno una vez:
+
+```powershell
+python -m venv .venv
+.venv\Scripts\python.exe -m pip install -r requirements.txt
+```
+
+Abrir tres terminales en esa misma raíz. Cada comando de las tablas siguientes se ejecuta en una terminal distinta. Se realizan siete envíos por nodo: 21 solicitudes en total.
+
+**Sockets TCP.** El programa original guarda sus CSV directamente en `data/`. Para que la demostración no reemplace los registros conservados, copiarlo a una carpeta de sesión nueva antes de iniciarlo:
+
+```powershell
+if (Test-Path .sesiones/demo-tcp) { throw 'Usa otro nombre de sesión para conservar los registros anteriores.' }
+New-Item -ItemType Directory -Path .sesiones/demo-tcp/src/sockets | Out-Null
+Copy-Item src/sockets/nodo.py .sesiones/demo-tcp/src/sockets/nodo.py
+```
+
+| Terminal | Comando |
+|---|---|
+| A | `.venv\Scripts\python.exe -u .sesiones/demo-tcp/src/sockets/nodo.py nodo-A 7` |
+| B | `.venv\Scripts\python.exe -u .sesiones/demo-tcp/src/sockets/nodo.py nodo-B 7` |
+| C | `.venv\Scripts\python.exe -u .sesiones/demo-tcp/src/sockets/nodo.py nodo-C 7` |
+
+Los puertos 5000, 5001 y 5002 deben estar libres. Esperar a que los tres nodos indiquen que están escuchando y pulsar Enter en las tres terminales, una tras otra. Los nuevos CSV quedan en `.sesiones/demo-tcp/data/`. El proceso conserva cinco segundos de recepción tras sus envíos.
+
+**gRPC.** Los módulos generados de Protocol Buffers ya están incluidos en `src/grpc/generated/`. Preparar una carpeta distinta para sus registros:
+
+```powershell
+if (Test-Path .sesiones/demo-grpc) { throw 'Usa otro nombre de sesión para conservar los registros anteriores.' }
+New-Item -ItemType Directory -Path .sesiones/demo-grpc | Out-Null
+```
+
+| Terminal | Comando |
+|---|---|
+| A | `.venv\Scripts\python.exe -u src/grpc/nodo.py nodo-A 7 --espera-inicio 30 --espera-final 15 --salida .sesiones/demo-grpc` |
+| B | `.venv\Scripts\python.exe -u src/grpc/nodo.py nodo-B 7 --espera-inicio 30 --espera-final 15 --salida .sesiones/demo-grpc` |
+| C | `.venv\Scripts\python.exe -u src/grpc/nodo.py nodo-C 7 --espera-inicio 30 --espera-final 15 --salida .sesiones/demo-grpc` |
+
+Iniciar las tres terminales dentro de los primeros 30 segundos para que todos estén escuchando antes de los envíos automáticos. gRPC usa los puertos 50051, 50052 y 50053. Los CSV quedan en `.sesiones/demo-grpc/` y registran tanto las solicitudes como sus acuses. Estos comandos ejecutan los intercambios de Lamport; las mediciones de latencia se realizan con `analysis/medir_equipo.py`, como se indica más abajo.
+
+En Linux o macOS se utiliza `.venv/bin/python` y las operaciones equivalentes de creación y copia de carpetas. Para repetir la demostración, cambiar los nombres de ambas carpetas de sesión en todos los comandos.
+
 ## Análisis de las mediciones recibidas
 
 La integración final de los tres equipos está en `analysis/resultados-finales-2026-11-22/`, con subcarpetas por integrante. Reúne 26 400 filas originales, 4 800 de calentamiento excluidas y 21 600 mediciones válidas en 112 corridas. No se promedian máquinas distintas. Los CSV fuente se enumeran en `sesiones.json`, las cantidades en `inventario.csv` y la verificación de las cinco sesiones de eventos en `lamport.csv`. Los originales se conservan sin editar.
