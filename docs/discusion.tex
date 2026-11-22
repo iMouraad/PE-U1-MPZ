@@ -90,16 +90,24 @@ al llegar. Revisar ese recorrido sigue siendo necesario para modelar
 el ciclo completo de solicitud y respuesta.
 
 \subsection{Aplicación al PFC y límites de la decisión}
-\textbf{Pendiente de concretar con el equipo:} identificar el sistema
-del PFC y nombrar una interacción real para cada mecanismo.
-Como criterio provisional, sockets sería una opción para un canal
-interno pequeño cuyo formato y validación pueda mantener el grupo,
-si las nuevas mediciones confirman la importancia de ese ahorro de RTT.
-gRPC sería una opción para operaciones entre servicios que necesiten
-un contrato explícito, solicitudes y respuestas tipadas y plazos
-de llamada. Son criterios de diseño derivados del código disponible;
-no son decisiones ya adoptadas para un proyecto cuyo escenario aún
-no se ha documentado aquí.
+El PFC del equipo de Angel es el SGIRI, un sistema de gestión de
+incidencias de red para un proveedor de internet, que se está separando
+en servicios. En él, gRPC encaja en la consulta de
+\texttt{servicio-incidencias} a \texttt{servicio-tecnicos} para
+resolver el técnico asignado a una incidencia: es una operación entre
+servicios con solicitud y respuesta definidas, donde el contrato
+\texttt{.proto} y el plazo de la llamada permiten responder con un
+error controlado si el otro servicio no contesta. Sockets TCP encaja
+en un canal interno pequeño, como el envío periódico del estado de un
+equipo de red hacia el servicio de incidencias, donde el formato es
+simple y lo mantiene el propio equipo.
+
+En las mediciones del 22 de noviembre en el equipo Mourad, la mediana
+de gRPC estuvo entre 0,34 y 0,58~ms y la de sockets entre 0,05 y
+0,15~ms. La diferencia es menor a un milisegundo en loopback, por lo
+que en el SGIRI la elección depende más del contrato y del manejo de
+errores que de la latencia. Esta decisión se documentará en el ADR del
+mecanismo de comunicación del PFC.
 
 Las mediciones en loopback dejan fuera la latencia de una red entre
 máquinas y comparten los recursos del mismo equipo. Como detalla
