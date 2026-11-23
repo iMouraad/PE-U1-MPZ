@@ -1,0 +1,18 @@
+{
+  "mecanismo": "grpc",
+  "equipo": "DESKTOP-5MJCPHU",
+  "python": "3.12.10",
+  "inicio": "2026-11-22T18:55:15.832475-05:00",
+  "fin": "2026-11-22T18:55:28.733738-05:00",
+  "repeticiones_validas": 5,
+  "calentamiento_por_condicion": 1,
+  "envios_por_cliente": 1000,
+  "modos": [
+    "concurrente"
+  ],
+  "comando": "analysis/medir_equipo.py grpc --salida data/steven/2026-11-22/mediciones_grpc_concurrente_1000 --repeticiones 5 --envios 1000 --modos concurrente",
+  "fuente": "src\\grpc\\latencia.py",
+  "sha256_fuente": "d964fb2cf5150c7d33313d66188f123a08160a7b39b70241f28d219bb9461710",
+  "duracion_corrida": "Desde antes de crear los clientes hasta finalizar sus conexiones; incluye el grupo de hilos en concurrencia",
+  "latencia_individual": "Según los límites del cliente original; JSON se prepara antes del cronómetro y gRPC serializa durante la llamada"
+}

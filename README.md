@@ -180,6 +180,24 @@ Para repetir la verificación desde la raíz:
 python analysis/verificar_lamport.py "data/steven/2026-11-21/eventos_grpc_ack/eventos_grpc_*.csv"
 ```
 
+### Nueva prueba gRPC concurrente de Steven — 22 de noviembre de 2026
+
+La carpeta `data/steven/2026-11-22/mediciones_grpc_concurrente_1000/`
+conserva una sesión nueva con tres clientes simultáneos. Para cada tamaño
+serializado, 100 y 10 000 bytes, se descartó una corrida de calentamiento y
+se realizaron cinco corridas válidas de 1 000 envíos por cliente. El CSV
+contiene 36 000 filas: 30 000 válidas y 6 000 de calentamiento. `sesion.json`
+registra el equipo, Python, horas, parámetros, comando y hash de la fuente;
+`servidor.log` conserva la salida original del servidor. La captura directa
+`evidencias/steven/2026-11-22/grpc-concurrente-1000.png` muestra usuario,
+equipo, fecha, hora, conteos por cliente y el SHA-256 del CSV.
+
+La sesión se ejecutó con:
+
+```text
+python analysis/medir_equipo.py grpc --salida data/steven/2026-11-22/mediciones_grpc_concurrente_1000 --repeticiones 5 --envios 1000 --modos concurrente
+```
+
 ## Integridad de los CSV
 
 [data/SHA256SUMS](data/SHA256SUMS) contiene los SHA-256 de todos los CSV de `data/`, incluidos sus subdirectorios. Sus rutas se interpretan desde `data/`. Los diez hashes anteriores se comprobaron antes de ampliar el archivo. También se contrastaron los doce CSV de la carpeta de Melanie con las copias originales de su sesión local. Dos de esos doce son los resúmenes derivados para capturas.

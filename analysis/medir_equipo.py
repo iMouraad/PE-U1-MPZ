@@ -98,13 +98,21 @@ def main():
     parser.add_argument("mecanismo", choices=("sockets", "grpc"))
     parser.add_argument("--salida", type=Path, required=True, help="Carpeta nueva de resultados")
     parser.add_argument("--repeticiones", type=int, default=5)
+    parser.add_argument("--envios", type=int, default=100, help="Envíos por cliente y corrida")
+    parser.add_argument(
+        "--modos", nargs="+", choices=("secuencial", "concurrente"),
+        default=("secuencial", "concurrente"),
+    )
     args = parser.parse_args()
     if args.repeticiones < 5:
         parser.error("Se requieren al menos cinco repeticiones válidas")
+    if args.envios <= 0:
+        parser.error("Los envíos deben ser positivos")
     if args.salida.exists():
         parser.error("La carpeta de salida ya existe")
     raiz = Path(__file__).resolve().parents[1]
     modulo, fuente = cargar_cliente(raiz, args.mecanismo)
+    modulo.ENVIOS = args.envios
     with socket.socket() as comprobacion:
         comprobacion.bind((modulo.HOST, modulo.PUERTO))
 
@@ -122,7 +130,7 @@ def main():
             try:
                 esperar_servidor(modulo, args.mecanismo, servidor)
                 print(f"{args.mecanismo}: servidor disponible en {modulo.HOST}:{modulo.PUERTO}", flush=True)
-                for modo in ("secuencial", "concurrente"):
+                for modo in args.modos:
                     filas = []
                     for tamano in modulo.TAMANOS:
                         for corrida in range(args.repeticiones + 1):
@@ -148,6 +156,8 @@ def main():
             "python": platform.python_version(), "inicio": inicio,
             "fin": datetime.now().astimezone().isoformat(),
             "repeticiones_validas": args.repeticiones, "calentamiento_por_condicion": 1,
+            "envios_por_cliente": args.envios, "modos": list(args.modos),
+            "comando": " ".join(sys.argv),
             "fuente": str(fuente.relative_to(raiz)),
             "sha256_fuente": hashlib.sha256(fuente.read_bytes()).hexdigest(),
             "duracion_corrida": "Desde antes de crear los clientes hasta finalizar sus conexiones; incluye el grupo de hilos en concurrencia",

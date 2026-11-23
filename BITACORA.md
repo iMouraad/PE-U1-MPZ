@@ -143,3 +143,13 @@
 - Se actualizaron el protocolo, las explicaciones de implementación, los resultados, las amenazas a la validez, la discusión y las conclusiones. Se añadieron las capturas originales de Angel y la terminal de Steven, sin editar las imágenes ni los CSV.
 - Se documentaron las diferencias del gRPC concurrente de Steven: una corrida válida por tamaño y duración medida después de preparar los canales. No se presenta como un ensayo con condiciones idénticas ni se estima una barra de error entre corridas cuando n=1.
 - Estado: Melanie revisó y aprobó el PDF de 35 páginas y autorizó publicar esta integración, sus resultados, scripts y documentación en un único commit.
+
+## Domingo 22/11/2026 — Nueva sesión concurrente de Steven
+
+- Integrante: Steven Pozo.
+- Requisito atendido: repetí únicamente gRPC concurrente con tres clientes simultáneos, mensajes serializados de 100 y 10 000 bytes, una corrida de calentamiento descartada y cinco válidas por tamaño, con 1 000 envíos por cliente en cada corrida.
+- Resultado: el CSV original contiene 36 000 identificadores únicos, distribuidos en 30 000 mediciones válidas y 6 000 de calentamiento. Cada una de las doce combinaciones de tamaño y corrida contiene 3 000 mensajes, 1 000 por cliente.
+- Trazabilidad: `sesion.json` registra el equipo `DESKTOP-5MJCPHU`, Python 3.12.10, las horas, los parámetros, el comando y el hash de la fuente. El CSV no se editó manualmente y se incorporó a `data/SHA256SUMS`.
+- Evidencia: guardé una captura directa de PowerShell con usuario, equipo, fecha, hora, Python, los conteos total, válido y de calentamiento, 12 000 registros por cliente y el SHA-256 completo.
+- Problema encontrado: dos intentos iniciales no alcanzaron el servidor local desde el entorno restringido y no produjeron CSV; sus registros incompletos se conservaron fuera del repositorio. La sesión válida se repitió completa con acceso local a gRPC.
+- Pendiente de integración grupal: regenerar las tablas y gráficos, actualizar el informe y añadir el enlace del video.
