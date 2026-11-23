@@ -1,10 +1,11 @@
 \section{Conclusiones}
 \label{sec:conclusiones}
-La integración final reúne 21\,600 RTT válidos en 112 corridas,
-después de excluir 4\,800 observaciones de calentamiento. Los datos
+La integración final reúne 51\,000 RTT válidos en 120 corridas,
+después de excluir 10\,200 observaciones de calentamiento. Los datos
 se mantienen separados en tres equipos con mediciones de ambos
-mecanismos. Las condiciones secuenciales tienen cinco repeticiones;
-gRPC concurrente de Steven conserva una por tamaño.
+mecanismos. Todas las condiciones finales tienen cinco repeticiones.
+La nueva sesión gRPC concurrente de Steven aporta 30\,000 RTT válidos
+con 1\,000 envíos por cliente; las demás usan 100.
 
 La dirección de la hipótesis se observó en los tres equipos para
 100 bytes y envíos secuenciales: las medianas de sockets/gRPC fueron
@@ -17,9 +18,10 @@ Con 10\,000 bytes y tres clientes en Mourad, las medias fueron
 0,1639 ms en sockets y 0,6005 ms en gRPC. Los resultados describen
 las implementaciones ensayadas: no aíslan el transporte, porque
 la serialización y los intervalos de cronometraje difieren. Las
-tasas concurrentes de Steven requieren especial cautela por su
-distinto número de corridas y la preparación de canales excluida
-del intervalo gRPC.
+tasas concurrentes de Steven requieren especial cautela por el
+distinto volumen de solicitudes por cliente y las fechas de ejecución.
+La nueva sesión incluye el arranque de clientes, pero su carga diez
+veces mayor impide atribuir la diferencia de tasas solo al mecanismo.
 
 Las series iniciales de Lamport verificaron 21 relaciones y 42
 eventos por corrida. Tras incorporar los acuses, la sesión gRPC de

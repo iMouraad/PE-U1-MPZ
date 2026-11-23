@@ -96,13 +96,16 @@ registró 0,0479 frente a 0,33505 ms y DESKTOP-5MJCPHU, 0,0231 frente
 a 0,27715 ms. Es una coincidencia descriptiva de las implementaciones,
 no una prueba de que la diferencia sea independiente del hardware.
 
-En Steven, sockets se midió dos días después de gRPC y tiene cinco
-corridas concurrentes frente a una por tamaño. Además, el cronómetro
-concurrente gRPC original comienza después de preparar los canales.
-Por eso no se compara su tasa como si ambos mecanismos tuvieran el
-mismo coste de arranque ni se atribuye la menor dispersión de una
-condición a un mecanismo sin repeticiones equivalentes. Las tablas
-mantienen la procedencia y el número de corridas a la vista.
+En Steven, la sesión gRPC concurrente del 22/11 reemplaza en el
+análisis a la serie original de una corrida por tamaño. Ahora tiene
+cinco repeticiones e incluye preparación y cierre de clientes en el
+tiempo total. Sin embargo, se ejecutaron 1\,000 solicitudes por cliente,
+frente a 100 en TCP y en las otras condiciones. El mayor volumen
+reduce el peso relativo del arranque y puede modificar la carga del
+servidor. Por ello no se calcula una ventaja causal del transporte
+a partir de sus tasas concurrentes ni se presenta el cambio de sesión
+como una mejora del código: también cambiaron la carga y la fecha.
+Los datos previos se conservan sin incorporarlos de nuevo al inventario.
 
 \subsection{Aplicación al PFC y límites de la decisión}
 El PFC del equipo de Angel es el SGIRI, un sistema de gestión de

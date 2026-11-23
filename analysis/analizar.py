@@ -200,6 +200,7 @@ def exportar_informe(datos, resumen, destino, ejemplo=False):
             columnas = min(2, len(condiciones))
             filas = (len(condiciones) + columnas - 1) // columnas
             fig, ejes = plt.subplots(filas, columnas, figsize=(6 * columnas, 3.8 * filas), squeeze=False)
+            cargas_distintas = False
             for eje, condicion in zip(ejes.flat, condiciones.itertuples(index=False)):
                 mascara = (
                     datos["equipo"].eq(condicion.equipo)
@@ -230,7 +231,20 @@ def exportar_informe(datos, resumen, destino, ejemplo=False):
                                          color="#263343", capsize=5, fmt="none")
                         eje.text(posicion, muestras.mean(), f"  n={len(muestras)}",
                                  ha="left", va="bottom", fontsize=9)
-                eje.set_xticks([0, 1], ["Sockets TCP", "gRPC"])
+                etiquetas_mecanismos = ["Sockets TCP", "gRPC"]
+                cargas = corridas.loc[
+                    corridas["equipo"].eq(condicion.equipo)
+                    & corridas["modo"].eq(condicion.modo)
+                    & corridas["bytes_mensaje"].eq(condicion.bytes_mensaje)
+                ].groupby("mecanismo")["mensajes"].agg(lambda valores: sorted(set(valores)))
+                if len({tuple(valores) for valores in cargas}) > 1:
+                    cargas_distintas = True
+                    etiquetas_mecanismos = [
+                        etiqueta + "\n" + "/".join(str(int(n)) for n in cargas.get(mecanismo, []))
+                        + " envíos/corrida"
+                        for etiqueta, mecanismo in zip(etiquetas_mecanismos, colores)
+                    ]
+                eje.set_xticks([0, 1], etiquetas_mecanismos)
                 eje.set_xlim(-0.55, 1.55)
                 eje.set_title(f"{condicion.equipo} · {condicion.modo} · {condicion.bytes_mensaje} B")
                 eje.set_ylabel("Latencia RTT (ms)")
@@ -247,7 +261,7 @@ def exportar_informe(datos, resumen, destino, ejemplo=False):
                 else "n = corridas válidas; con una sola corrida se omite la barra de error. No es un intervalo de confianza."
             )
             fig.text(0.5, 0.015, nota, ha="center", fontsize=9)
-            fig.tight_layout(rect=(0, 0.05, 1, 0.92))
+            fig.tight_layout(rect=(0, 0.08 if cargas_distintas else 0.05, 1, 0.92))
             try:
                 fig.savefig(carpeta / f"{nombre}.png", dpi=160)
                 fig.savefig(carpeta / f"{nombre}.pdf")

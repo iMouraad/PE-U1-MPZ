@@ -5,7 +5,8 @@ Los tres equipos ejecutaron procesos en localhost: comparten CPU,
 memoria y loopback. Se registraron sistema, procesador, RAM y versiones,
 pero no una traza continua de CPU, temperatura o programas abiertos.
 Melanir y Mourad ejecutaron primero sockets y después gRPC; la serie
-TCP de Steven es del 21/11 y su gRPC del 19/11. No se alternaron ni
+TCP de Steven es del 21/11, su gRPC secuencial del 19/11 y el
+concurrente actualizado del 22/11. No se alternaron ni
 aleatorizaron de manera controlada las condiciones. Estos factores
 pueden explicar parte de las diferencias y no quedan eliminados por
 tener varios miles de solicitudes.
@@ -19,11 +20,13 @@ distintos, no una medición aislada de TCP frente a HTTP/2
 \cite{blinowski2026rpc,jackson2024streaming}.
 
 En el programa común, el rendimiento incluye creación y cierre de
-clientes y conexiones y gestión de hilos. El gRPC concurrente original
-de Steven comienza después de preparar los canales. Sus tasas no
-representan exactamente el mismo intervalo. Las tablas explicitan
-el origen; las diferencias entre esas tasas no deben interpretarse
-como un efecto del transporte por sí solo.
+clientes y conexiones y gestión de hilos, también en el gRPC concurrente
+actualizado de Steven. Esta nueva sesión usa 1\,000 envíos por cliente,
+frente a 100 en las otras condiciones; una carga más larga cambia la
+amortización del arranque y puede cambiar la carga de CPU y la latencia.
+Sus tasas no constituyen una comparación bajo cargas equivalentes.
+La serie concurrente original, con otro límite de cronometraje, queda
+fuera del conjunto final y se conserva para trazabilidad.
 
 Las conexiones de gRPC se abren con \texttt{insecure\_channel}; las
 de sockets son TCP sin TLS. No se evaluaron cifrado, pérdida de paquetes,
@@ -34,9 +37,9 @@ los plazos del código no prueban robustez ante fallos reales.
 Todas las series finales tienen calentamiento etiquetado y excluido.
 Se mantuvieron los identificadores de corrida y los originales, con
 hashes comprobados. Cada condición secuencial tiene cinco repeticiones;
-la concurrente también, salvo gRPC de Steven con una por tamaño.
-No se estima una desviación entre corridas cuando $n=1$ ni se trata
-cada solicitud como una repetición independiente del experimento.
+la concurrente también, incluida la sesión gRPC nueva de Steven.
+Se estima la dispersión entre cinco corridas; no se trata cada
+solicitud como una repetición independiente del experimento.
 
 La desviación y P95 por mensaje describen la distribución dentro de
 la muestra. Las barras de error describen una desviación entre medias

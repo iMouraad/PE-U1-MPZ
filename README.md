@@ -87,7 +87,7 @@ En Linux o macOS se utiliza `.venv/bin/python` y las operaciones equivalentes de
 
 ## Análisis de las mediciones recibidas
 
-La integración final de los tres equipos está en `analysis/resultados-finales-2026-11-22/`, con subcarpetas por integrante. Reúne 26 400 filas originales, 4 800 de calentamiento excluidas y 21 600 mediciones válidas en 112 corridas. No se promedian máquinas distintas. Los CSV fuente se enumeran en `sesiones.json`, las cantidades en `inventario.csv` y la verificación de las cinco sesiones de eventos en `lamport.csv`. Los originales se conservan sin editar.
+La integración final de los tres equipos está en `analysis/resultados-finales-2026-11-22/`, con subcarpetas por integrante. Reúne 61 200 filas originales, 10 200 de calentamiento excluidas y 51 000 mediciones válidas en 120 corridas. No se promedian máquinas distintas. Los CSV fuente se enumeran en `sesiones.json`, las cantidades en `inventario.csv` y la verificación de las cinco sesiones de eventos en `lamport.csv`. Los originales se conservan sin editar.
 
 Para regenerar todas las tablas y figuras finales desde la raíz, usando una carpeta de salida nueva:
 
@@ -95,7 +95,7 @@ Para regenerar todas las tablas y figuras finales desde la raíz, usando una car
 python analysis/integrar_sesiones.py --salida analysis/resultados-finales-revision
 ```
 
-Este programa comprueba los hashes, reutiliza `analizar.py` y `verificar_lamport.py` y genera el inventario, los resultados por equipo y las tablas de Lamport. gRPC concurrente de Steven tiene una corrida válida por tamaño; las otras condiciones tienen cinco. Su rendimiento concurrente excluye la preparación de canales, mientras el programa común incluye ese trabajo y la gestión de hilos: se documenta esta diferencia y no se interpreta como una comparación aislada del transporte. La serie gRPC con acuses del 21/11 verifica 42 relaciones y 84 eventos; las series históricas mantienen su alcance original.
+Este programa comprueba los hashes, reutiliza `analizar.py` y `verificar_lamport.py` y genera el inventario, los resultados por equipo y las tablas de Lamport. Todas las condiciones tienen cinco corridas válidas. Para gRPC concurrente de Steven selecciona la sesión del 22/11: 1 000 envíos por cliente y corrida frente a 100 en el resto, con preparación y cierre de clientes incluidos. Las figuras identifican las cargas distintas y el informe no atribuye sus diferencias de rendimiento solo al transporte. La serie anterior de una corrida por tamaño se conserva como antecedente y no se suma al conjunto final. La serie gRPC con acuses del 21/11 verifica 42 relaciones y 84 eventos; las series históricas mantienen su alcance original.
 
 ### Series preliminares conservadas
 
@@ -156,7 +156,7 @@ Los cuatro CSV ya identifican su modo, equipo y duración. Se excluye el calenta
 .venv\Scripts\python.exe analysis/verificar_lamport.py "data/melanie/2026-11-19/eventos_grpc_*.csv"
 ```
 
-En cada mecanismo se emparejaron 21 mensajes, con 21/21 relaciones envío–recepción y 42/42 actualizaciones locales correctas. El alcance es el de los CSV registrados: la implementación gRPC aún no registra el acuse como evento adicional ni actualiza el reloj del cliente al recibirlo.
+En cada mecanismo se emparejaron 21 mensajes, con 21/21 relaciones envío–recepción y 42/42 actualizaciones locales correctas. El alcance es el de los CSV históricos de Melanie: la versión gRPC usada el 19/11 no registraba el acuse como evento adicional ni actualizaba el reloj del cliente al recibirlo; la sesión posterior de Steven sí cubre ambos eventos.
 
 Las capturas 01 y 02 son de apoyo porque su encuadre no muestra toda la identificación. Las capturas 03–06 incluyen usuario, máquina, fecha y hora. Se mantienen los archivos originales sin editar.
 

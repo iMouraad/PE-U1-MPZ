@@ -10,7 +10,7 @@ define los flujos y tramas del transporte utilizado por gRPC
 parte de la implementación comparada \cite{jackson2024streaming}.
 
 Se incluyeron las sesiones de Melanir del 19/11, Mourad del 22/11 y
-DESKTOP-5MJCPHU del 19 y 21/11. Cada equipo tiene datos de ambos
+DESKTOP-5MJCPHU del 19, 21 y 22/11. Cada equipo tiene datos de ambos
 mecanismos. Las primeras mediciones nativas de sockets del 19/11 se
 conservan en la raíz de \texttt{data/}, pero no se mezclan con las
 mediciones posteriores de Mourad: carecen de duración total y no son
@@ -23,10 +23,10 @@ necesarias para el conjunto final. La selección exacta se guarda en
 \toprule
 Condición & Secuencial & Concurrente \\
 \midrule
-Clientes & Uno, 100 solicitudes por corrida & Tres, 100 solicitudes cada uno \\
+Clientes & Uno, 100 solicitudes por corrida & Tres; 100 solicitudes por cliente, salvo gRPC de Steven: 1\,000 \\
 Solicitud serializada & 100 y 10\,000 bytes & 100 y 10\,000 bytes \\
 Calentamiento & Una corrida etiquetada y excluida & Una corrida etiquetada y excluida \\
-Repeticiones válidas & Cinco en todos los equipos & Cinco, salvo gRPC de Steven: una por tamaño \\
+Repeticiones válidas & Cinco en todos los equipos & Cinco en todos los equipos \\
 \bottomrule
 \end{tabularx}\end{table}
 
@@ -65,18 +65,23 @@ carga de fondo; no se presume que esas condiciones fueran iguales.
 La latencia individual usa un contador de alta resolución en el cliente.
 En sockets, el JSON se construye antes del cronómetro; en gRPC se
 prepara el objeto antes, pero la llamada incluye la serialización interna.
-Los tamaños y las cantidades coinciden, aunque las etapas medidas no
-son idénticas. No se atribuye toda diferencia al transporte.
+Los tamaños serializados coinciden. Las cantidades coinciden salvo
+gRPC concurrente de Steven del 22/11: cinco corridas de 1\,000 envíos
+por cliente frente a los 100 del resto. No se atribuye toda diferencia
+al transporte ni se presenta esa comparación como una carga idéntica.
 
-Melanie, Angel y la sesión TCP de Steven emplearon el programa común
+Melanie, Angel y las sesiones TCP y gRPC concurrente actualizada de
+Steven emplearon el programa común
 \texttt{analysis/medir\_equipo.py}. La duración de cada corrida incluye
 preparación y cierre de los clientes y conexiones y, en concurrencia,
 el grupo de hilos. Una barrera coordina el trabajo antes de preparar
-las conexiones. Los CSV gRPC de Steven del 19/11 proceden del cliente
-original: en concurrencia la barrera se libera después de preparar los
-canales, de modo que la duración excluye esa preparación. Sus tasas
-se muestran con esa salvedad, no como una comparación aislada y
-equivalente del transporte entre sockets y gRPC.
+las conexiones. La sesión concurrente nueva incluye ese arranque,
+igual que TCP, pero utiliza diez veces más solicitudes por cliente.
+Esto amortiza el coste fijo de preparación sobre una carga más larga.
+El gRPC secuencial de Steven del 19/11 procede del cliente original.
+El CSV concurrente de esa fecha, cuyo cronómetro excluía la preparación
+de canales, se conserva como antecedente y queda fuera de los resultados
+finales. No se concatenan sus observaciones con las del 22/11.
 
 \subsection{Análisis y reproducción}
 Los CSV identifican equipo, corrida, modo, bytes serializados, mensaje,
@@ -95,6 +100,5 @@ desviación estándar muestral por mensaje y P95 mediante interpolación
 lineal. El rendimiento es mensajes completados divididos entre la suma
 de duraciones válidas. El gráfico de barras utiliza la media de las
 medias de corrida y una desviación estándar entre esas medias.
-Con una sola corrida concurrente gRPC de Steven, no se puede estimar
-esa variabilidad y no se dibuja barra de error. Los intervalos de las
-otras condiciones tampoco son intervalos de confianza.
+Todas las condiciones finales tienen cinco corridas y sus barras
+muestran esa variación entre medias. No son intervalos de confianza.

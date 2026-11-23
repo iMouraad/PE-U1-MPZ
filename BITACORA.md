@@ -153,3 +153,12 @@
 - Evidencia: guardé una captura directa de PowerShell con usuario, equipo, fecha, hora, Python, los conteos total, válido y de calentamiento, 12 000 registros por cliente y el SHA-256 completo.
 - Problema encontrado: dos intentos iniciales no alcanzaron el servidor local desde el entorno restringido y no produjeron CSV; sus registros incompletos se conservaron fuera del repositorio. La sesión válida se repitió completa con acceso local a gRPC.
 - Pendiente de integración grupal: regenerar las tablas y gráficos, actualizar el informe y añadir el enlace del video.
+
+## Domingo 22/11/2026 — Integración de la nueva sesión de Steven por Melanie
+
+- Se incorporó al análisis final el CSV gRPC concurrente de Steven del 22/11, con cinco corridas válidas por tamaño. La serie anterior se conserva como antecedente y no se suma al conjunto final.
+- El inventario actualizado reúne 61 200 filas: 10 200 de calentamiento excluidas y 51 000 mediciones válidas, en 120 corridas y 24 condiciones. Se comprobaron los 32 hashes sin modificar los datos originales.
+- Con apoyo de Codex se ajustaron los scripts de integración y de gráficos. Las figuras indican los 3 000 envíos por corrida de la nueva sesión concurrente frente a los 300 de sockets; el informe explica que son 1 000 frente a 100 envíos por cliente y que las cargas no son equivalentes.
+- Se regeneraron las tablas, figuras y resúmenes de Steven, y se actualizaron el protocolo, resultados, amenazas a la validez, discusión, conclusiones y enlace a su nuevo aporte. Los resultados numéricos de Angel y Melanie permanecen iguales.
+- Las estadísticas nuevas se contrastaron con NumPy. Se revisaron visualmente las páginas modificadas y se recompilaron el informe de 36 páginas y el protocolo independiente. Se incorporó la captura original de Steven sin editarla.
+- Melanie revisó y aprobó el PDF y autorizó publicar esta integración en un solo commit. El README conserva el enlace al video añadido por el equipo; su duración, contenido y acceso público no se dan por verificados en esta revisión.

@@ -19,7 +19,7 @@ import verificar_lamport as lamport
 RAIZ = Path(__file__).resolve().parents[1]
 SESIONES = {
     "angel": {"equipo": "Mourad", "fecha": "22/11/2026", "base": "data/angel/2026-11-22"},
-    "steven": {"equipo": "DESKTOP-5MJCPHU", "fecha": "19 y 21/11/2026", "base": "data/steven/2026-11-21"},
+    "steven": {"equipo": "DESKTOP-5MJCPHU", "fecha": "19, 21 y 22/11/2026", "base": "data/steven/2026-11-21"},
     "melanie": {"equipo": "Melanir", "fecha": "19/11/2026", "base": "data/melanie/2026-11-19"},
 }
 
@@ -30,7 +30,7 @@ def entradas(persona, sesion):
         (base / "mediciones_sockets/latencias_sockets_secuencial.csv", "sockets"),
         (base / "mediciones_sockets/latencias_sockets_concurrente.csv", "sockets"),
         (Path("data/latencias_grpc.csv") if persona == "steven" else base / "mediciones_grpc/latencias_grpc_secuencial.csv", "grpc"),
-        (Path("data/latencias_grpc_concurrente.csv") if persona == "steven" else base / "mediciones_grpc/latencias_grpc_concurrente.csv", "grpc"),
+        (Path("data/steven/2026-11-22/mediciones_grpc_concurrente_1000/latencias_grpc_concurrente.csv") if persona == "steven" else base / "mediciones_grpc/latencias_grpc_concurrente.csv", "grpc"),
     ]
 
 

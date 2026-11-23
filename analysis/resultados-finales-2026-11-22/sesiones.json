@@ -9,7 +9,7 @@
     "data/steven/2026-11-21/mediciones_sockets/latencias_sockets_secuencial.csv",
     "data/steven/2026-11-21/mediciones_sockets/latencias_sockets_concurrente.csv",
     "data/latencias_grpc.csv",
-    "data/latencias_grpc_concurrente.csv"
+    "data/steven/2026-11-22/mediciones_grpc_concurrente_1000/latencias_grpc_concurrente.csv"
   ],
   "melanie": [
     "data/melanie/2026-11-19/mediciones_sockets/latencias_sockets_secuencial.csv",

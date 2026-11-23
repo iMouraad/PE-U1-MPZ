@@ -1,9 +1,9 @@
 \section{Resultados finales por equipo}
 \label{sec:resultados}
 \subsection{Inventario y procedencia}
-Se integraron 26\,400 filas de latencia: se excluyeron 4\,800 de
-calentamiento y quedaron 21\,600 mediciones válidas en 24 condiciones
-y 112 corridas válidas. Cada solicitud de RTT produce una fila; los
+Se integraron 61\,200 filas de latencia: se excluyeron 10\,200 de
+calentamiento y quedaron 51\,000 mediciones válidas en 24 condiciones
+y 120 corridas válidas. Cada solicitud de RTT produce una fila; los
 registros de Lamport son experimentos separados y no se suman a esos RTT.
 
 \input{../analysis/resultados-finales-2026-11-22/tabla_inventario.tex}
@@ -34,28 +34,38 @@ fueron 0,1639 y 0,6005 ms, respectivamente.
 \caption{Mourad: medias de cinco corridas y una desviación estándar entre medias.}
 \end{figure}\clearpage
 
-\subsection{Steven: DESKTOP-5MJCPHU, 19 y 21 de noviembre}
+\subsection{Steven: DESKTOP-5MJCPHU, 19, 21 y 22 de noviembre}
 Se combinaron los CSV TCP del 21/11 en la carpeta de Steven con los
-CSV gRPC originales del 19/11 en la raíz de \texttt{data/}.
+datos gRPC secuenciales del 19/11 y la nueva sesión gRPC concurrente
+del 22/11, en \path{data/steven/2026-11-22/mediciones_grpc_concurrente_1000/}.
 Esta selección reúne ambos mecanismos en la misma máquina, pero en
-días distintos. Hay cinco corridas válidas secuenciales en ambos;
-en concurrencia hay cinco de sockets y una de gRPC por tamaño.
+días distintos. Todas las condiciones tienen cinco corridas válidas.
+La nueva sesión concurrente usa 1\,000 envíos por cliente y corrida,
+frente a 100 en las otras condiciones: son 3\,000 solicitudes por
+corrida y 15\,000 válidas por tamaño. Se excluyeron 6\,000 solicitudes
+de calentamiento de esta sesión. La serie concurrente anterior se
+conserva como antecedente y no se suma al inventario final.
 La mediana secuencial de 100 bytes fue 0,0231 ms con sockets y
 0,27715 ms con gRPC. Las cifras son descriptivas; los límites de la
-duración concurrente difieren según el apartado~\ref{sec:protocolo}.
+carga y fechas difieren según el apartado~\ref{sec:protocolo}.
 
 \input{../analysis/resultados-finales-2026-11-22/steven/tabla_latencias.tex}
 \input{../analysis/resultados-finales-2026-11-22/steven/tabla_rendimiento.tex}
 
-La ausencia de barra de error en gRPC concurrente significa que hay
-una sola corrida válida, no que la variabilidad sea cero. Los
-percentiles y la desviación por mensaje sí se obtienen de las 300
-observaciones de esa corrida. El rendimiento reporta el intervalo
-de cada implementación; no permite aislar un efecto causal del mecanismo.
+Las barras de gRPC concurrente ahora muestran la desviación estándar
+de cinco medias de corrida. Su mayor número de solicitudes cambia
+la duración de la carga y el peso relativo del arranque de clientes;
+no equivale a repetir sockets con la misma carga. Las tablas y figuras
+describen las sesiones observadas, sin atribuir sus diferencias
+exclusivamente al mecanismo.
+En gRPC concurrente, las medias fueron 0,9736 ms con 100 bytes y
+0,9297 ms con 10\,000 bytes; los P95 fueron 1,3867 y 1,2874 ms.
+Las tasas agregadas fueron 2\,933,59 y 3\,038,26 mensajes/s.
+Estas cifras corresponden a la carga de 1\,000 envíos por cliente.
 \clearpage
 \begin{figure}[p]\centering
 \includegraphics[width=\linewidth,height=0.41\textheight,keepaspectratio]{../analysis/resultados-finales-2026-11-22/steven/cajas_latencias.pdf}
-\caption{DESKTOP-5MJCPHU: latencias por mensaje, manteniendo modo y tamaño.}
+\caption{DESKTOP-5MJCPHU: latencias por mensaje; gRPC concurrente usa 1\,000 envíos por cliente y las demás condiciones, 100.}
 \includegraphics[width=\linewidth,height=0.41\textheight,keepaspectratio]{../analysis/resultados-finales-2026-11-22/steven/barras_latencias.pdf}
-\caption{DESKTOP-5MJCPHU: medias por corrida; gRPC concurrente tiene $n=1$ por tamaño y carece de intervalo estimable.}
+\caption{DESKTOP-5MJCPHU: cinco medias de corrida y una desviación estándar. Las cargas difieren: 1\,000 envíos por cliente en gRPC concurrente y 100 en el resto.}
 \end{figure}\clearpage
