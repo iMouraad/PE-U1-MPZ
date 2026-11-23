@@ -34,7 +34,8 @@ El PDF de una página del SGA ya fue entregado, según confirmación de Melanie.
 
 ## Video de sustentación
 
-**Enlace al video:** pendiente de añadir.
+**Enlace al video:**
+https://drive.google.com/drive/folders/1GMx0f-AoJvSjrPDstH1bmTkzQ7nI8UI1?usp=drive_link
 
 ## Informe del grupo
 
